@@ -1,28 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr-FR">
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}TP Symfony
+			{% block title %}Ferrari WEC
 			{% endblock %}
 		</title>
+
+		{# Lien vers le fichier CSS #}
+		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 	</head>
+
 	<body>
 
 		<header>
+			<h1>Ferrari – WEC 🏁</h1>
 			<nav>
 				<a href="{{ path('home') }}">Accueil</a>
-				|
-				<a href="{{ path('about') }}">À propos</a>
-				|
-				<a href="{{ path('hello', { name: 'Symfony' }) }}">Hello</a>
-				|
+				<a href="{{ path('ferrari') }}">Ferrari</a>
 				<a href="{{ path('random') }}">Citation</a>
 			</nav>
-			<hr>
 		</header>
 
-		{% block body %}{% endblock %}
+		<main>
+			{% block body %}{% endblock %}
+		</main>
 
 	</body>
 </html>
