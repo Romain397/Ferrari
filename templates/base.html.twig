@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}TP Symfony
+			{% endblock %}
+		</title>
+	</head>
+	<body>
+
+		<header>
+			<nav>
+				<a href="{{ path('home') }}">Accueil</a>
+				|
+				<a href="{{ path('about') }}">À propos</a>
+				|
+				<a href="{{ path('hello', { name: 'Symfony' }) }}">Hello</a>
+				|
+				<a href="{{ path('random') }}">Citation</a>
+			</nav>
+			<hr>
+		</header>
+
+		{% block body %}{% endblock %}
+
+	</body>
+</html>
