@@ -4,6 +4,21 @@
 {% endblock %}
 
 {% block main %}
-	<h1>Bienvenue sur le site WEC</h1>
-	<p>Ce projet Symfony utilise Twig et un menu centralisé.</p>
+	<h1>Ferrari – Histoire & Héritage</h1>
+
+	<p>
+		Ferrari est une marque emblématique du sport automobile, fondée par Enzo Ferrari.
+		    Présente en endurance et en Formule 1, la Scuderia incarne la performance et la passion.
+	</p>
+
+	<h2>Voitures emblématiques</h2>
+
+	<div class="cards">
+		{% for car in cars %}
+			<div class="card">
+				<h3>{{ car }}</h3>
+				<p>Modèle emblématique Ferrari.</p>
+			</div>
+		{% endfor %}
+	</div>
 {% endblock %}

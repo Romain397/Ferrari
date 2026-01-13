@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sport Auto
+{% endblock %}
+
+{% block main %}
+	<h1>Palmarès Ferrari en WEC</h1>
+
+	<ul>
+		{% for item in palmares %}
+			<li>
+				<strong>{{ item.year }}</strong>
+				–
+				{{ item.title }}
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}
