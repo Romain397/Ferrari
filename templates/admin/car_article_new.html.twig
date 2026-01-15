@@ -6,16 +6,33 @@
 {% block main %}
 	<h1>Créer un nouvel article de voiture</h1>
 
-	{# Afficher les messages flash #}
+	{# Flash messages #}
 	{% for label, messages in app.flashes %}
 		{% for message in messages %}
 			<div class="alert alert-{{ label }}">{{ message }}</div>
 		{% endfor %}
 	{% endfor %}
 
-	{# Formulaire #}
-	{{ form_start(form) }}
-	{{ form_widget(form) }}
+	{# Formulaire avec désactivation validation HTML5 #}
+	{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+	{# Affichage erreurs globales #}
+	{% if form.vars.errors|length > 0 %}
+		<div class="alert alert-danger">
+			{% for error in form.vars.errors %}
+				<p>{{ error.message }}</p>
+			{% endfor %}
+		</div>
+	{% endif %}
+
+	{# Champs du formulaire #}
+	{{ form_row(form.model) }}
+	{{ form_row(form.title) }}
+	{{ form_row(form.content) }}
+	{{ form_row(form.highlight) }}
+	{{ form_row(form.year) }}
+
 	<button type="submit" class="btn btn-primary mt-3">Valider</button>
+
 	{{ form_end(form) }}
 {% endblock %}
