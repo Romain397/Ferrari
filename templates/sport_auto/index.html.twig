@@ -1,18 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sport Auto
+{% block title %}Sport Auto – Palmarès Ferrari
 {% endblock %}
 
 {% block main %}
-	<h1>Palmarès Ferrari en WEC</h1>
+	<h1>{{ 'palmarès ferrari wec'|upper }}</h1>
 
-	<ul>
+	<ul class="palmares">
 		{% for item in palmares %}
-			<li>
+			<li class="{% if item.major %}major{% endif %}">
 				<strong>{{ item.year }}</strong>
 				–
-				{{ item.title }}
+				{{ item.title|capitalize }}
+
+				{% if item.major %}
+					<span class="badge">
+						{{ 'titre majeur'|upper }}
+					</span>
+				{% endif %}
 			</li>
 		{% endfor %}
 	</ul>
+
+	<p class="summary">
+		Nombre total de résultats :
+		{{ palmares|length }}
+	</p>
 {% endblock %}

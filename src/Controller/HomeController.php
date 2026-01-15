@@ -27,9 +27,21 @@ class HomeController extends AbstractController
     public function sportAuto(): Response
     {
         $palmares = [
-            ['year' => 2023, 'title' => 'Victoire aux 24 Heures du Mans'],
-            ['year' => 2024, 'title' => 'Championnat WEC Hypercar'],
-            ['year' => 2025, 'title' => 'Double podium WEC']
+            [
+                'year' => 2023,
+                'title' => 'Victoire aux 24 Heures du Mans',
+                'major' => true
+            ],
+            [
+                'year' => 2024,
+                'title' => 'Champion du monde WEC Hypercar',
+                'major' => true
+            ],
+            [
+                'year' => 2025,
+                'title' => 'Double podium en championnat WEC',
+                'major' => false
+            ],
         ];
 
         return $this->render('sport_auto/index.html.twig', [
