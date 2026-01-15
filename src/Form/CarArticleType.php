@@ -24,13 +24,13 @@ class CarArticleType extends AbstractType
                 'label' => 'Modèle',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'Le modèle est obligatoire']),
-                    // new Length([
-                    //     'min' => 2,
-                    //     'max' => 50,
-                    //     'minMessage' => 'Le modèle doit contenir au moins {{ limit }} caractères',
-                    //     'maxMessage' => 'Le modèle ne peut pas dépasser {{ limit }} caractères',
-                    // ]),
+                    new NotBlank(message: 'Le modèle est obligatoire'),
+                    new Length(
+                        min: 2,
+                        max: 50,
+                        minMessage: 'Le modèle doit contenir au moins {{ limit }} caractères',
+                        maxMessage: 'Le modèle ne peut pas dépasser {{ limit }} caractères'
+                    ),
                 ],
                 'attr' => ['placeholder' => 'Ex: Ferrari SF90'],
             ])
@@ -38,13 +38,13 @@ class CarArticleType extends AbstractType
                 'label' => 'Titre',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'Le titre est obligatoire']),
-                    // new Length([
-                    //     'min' => 3,
-                    //     'max' => 100,
-                    //     'minMessage' => 'Le titre doit contenir au moins {{ limit }} caractères',
-                    //     'maxMessage' => 'Le titre ne peut pas dépasser {{ limit }} caractères',
-                    // ]),
+                    new NotBlank(message: 'Le titre est obligatoire'),
+                    new Length(
+                        min: 3,
+                        max: 100,
+                        minMessage: 'Le titre doit contenir au moins {{ limit }} caractères',
+                        maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères'
+                    ),
                 ],
                 'attr' => ['placeholder' => 'Titre de l’article'],
             ])
@@ -52,13 +52,13 @@ class CarArticleType extends AbstractType
                 'label' => 'Description',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'Le contenu est obligatoire']),
-                    // new Length([
-                    //     'min' => 10,
-                    //     'max' => 1000,
-                    //     'minMessage' => 'Le contenu doit contenir au moins {{ limit }} caractères',
-                    //     'maxMessage' => 'Le contenu ne peut pas dépasser {{ limit }} caractères',
-                    // ]),
+                    new NotBlank(message: 'Le contenu est obligatoire'),
+                    new Length(
+                        min: 10,
+                        max: 1000,
+                        minMessage: 'Le contenu doit contenir au moins {{ limit }} caractères',
+                        maxMessage: 'Le contenu ne peut pas dépasser {{ limit }} caractères'
+                    ),
                 ],
                 'attr' => ['placeholder' => 'Description de la voiture'],
             ])
@@ -70,13 +70,13 @@ class CarArticleType extends AbstractType
                 'label' => 'Année',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'L\'année est obligatoire']),
-                    new Positive(['message' => 'L\'année doit être positive']),
-                    new Range([
-                        'min' => 1900,
-                        'max' => 2100,
-                        'notInRangeMessage' => 'L\'année doit être comprise entre {{ min }} et {{ max }}',
-                    ]),
+                    new NotBlank(message: 'L\'année est obligatoire'),
+                    new Positive(message: 'L\'année doit être positive'),
+                    new Range(
+                        min: 1900,
+                        max: 2100,
+                        notInRangeMessage: 'L\'année doit être comprise entre {{ min }} et {{ max }}'
+                    ),
                 ],
                 'attr' => ['placeholder' => 'Ex: 2025'],
             ]);

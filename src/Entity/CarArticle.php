@@ -33,9 +33,8 @@ class CarArticle
     )]
     private ?string $content = null;
 
-    private ?bool $highlight = false;
+    private bool $highlight = false;
 
-    #[Assert\NotBlank(message: 'L\'année est obligatoire')]
     #[Assert\Positive(message: 'L\'année doit être un nombre positif')]
     #[Assert\Range(
         min: 1900,
@@ -50,6 +49,7 @@ class CarArticle
     {
         return $this->model;
     }
+
     public function setModel(string $model): self
     {
         $this->model = $model;
@@ -60,6 +60,7 @@ class CarArticle
     {
         return $this->title;
     }
+
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -70,16 +71,18 @@ class CarArticle
     {
         return $this->content;
     }
+
     public function setContent(string $content): self
     {
         $this->content = $content;
         return $this;
     }
 
-    public function getHighlight(): ?bool
+    public function isHighlight(): bool
     {
         return $this->highlight;
     }
+
     public function setHighlight(bool $highlight): self
     {
         $this->highlight = $highlight;
@@ -90,6 +93,7 @@ class CarArticle
     {
         return $this->year;
     }
+
     public function setYear(int $year): self
     {
         $this->year = $year;
