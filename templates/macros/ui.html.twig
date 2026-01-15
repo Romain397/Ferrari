@@ -2,6 +2,9 @@
 	<div class="card {% if highlight %}card-highlight{% endif %}">
 		<h3 class="card-title">
 			{{ title|upper }}
+			{% if highlight %}
+				⭐
+			{% endif %}
 		</h3>
 
 		<p class="card-content">
