@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel Article
+{% endblock %}
+
+{% block main %}
+	<h1>Créer un nouvel article de voiture</h1>
+
+	{# Afficher les messages flash #}
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ label }}">{{ message }}</div>
+		{% endfor %}
+	{% endfor %}
+
+	{# Formulaire #}
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<button type="submit" class="btn btn-primary mt-3">Valider</button>
+	{{ form_end(form) }}
+{% endblock %}
