@@ -17,6 +17,7 @@
         "symfony/flex": "^2",
         "symfony/form": "8.0.*",
         "symfony/framework-bundle": "8.0.*",
+        "symfony/monolog-bundle": "^3.0|^4.0",
         "symfony/routing": "8.0.*",
         "symfony/runtime": "8.0.*",
         "symfony/twig-bundle": "8.0.*",
@@ -78,6 +79,9 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.65"
+        "symfony/debug-bundle": "8.0.*",
+        "symfony/maker-bundle": "^1.65",
+        "symfony/stopwatch": "8.0.*",
+        "symfony/web-profiler-bundle": "8.0.*"
     }
 }
