@@ -1,26 +1,20 @@
 {% extends 'base.html.twig' %}
+{% import 'macros/ui.html.twig' as ui %}
 
-{% block title %}Sport Auto – Palmarès Ferrari
+{% block title %}
+	Sport Auto – Palmarès Ferrari
 {% endblock %}
 
 {% block main %}
 	<h1>{{ 'palmarès ferrari wec'|upper }}</h1>
 
-	<ul class="palmares">
-		{% for item in palmares %}
-			<li class="{% if item.major %}major{% endif %}">
-				<strong>{{ item.year }}</strong>
-				–
-				{{ item.title|capitalize }}
-
-				{% if item.major %}
-					<span class="badge">
-						{{ 'titre majeur'|upper }}
-					</span>
-				{% endif %}
-			</li>
-		{% endfor %}
-	</ul>
+	{% for item in palmares %}
+		{{ ui.card(
+            item.year,
+            item.title|capitalize,
+            item.major
+        ) }}
+	{% endfor %}
 
 	<p class="summary">
 		Nombre total de résultats :

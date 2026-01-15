@@ -1,0 +1,11 @@
+{% macro card(title, content, highlight = false) %}
+	<div class="card {% if highlight %}card-highlight{% endif %}">
+		<h3 class="card-title">
+			{{ title|upper }}
+		</h3>
+
+		<p class="card-content">
+			{{ content }}
+		</p>
+	</div>
+{% endmacro %}
