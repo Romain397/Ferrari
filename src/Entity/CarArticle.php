@@ -24,11 +24,9 @@ class CarArticle
     )]
     private ?string $title = null;
 
-    #[Assert\NotBlank(message: 'Le contenu est obligatoire')]
+    // Le champ description n’est plus obligatoire
     #[Assert\Length(
-        min: 0,
         max: 1000,
-        minMessage: 'Le contenu doit contenir au moins {{ limit }} caractères',
         maxMessage: 'Le contenu ne peut pas dépasser {{ limit }} caractères'
     )]
     private ?string $content = null;

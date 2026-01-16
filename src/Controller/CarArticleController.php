@@ -25,15 +25,12 @@ class CarArticleController extends AbstractController
 
         // 4️⃣ Vérifier si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
-            // Ici, comme on n'a pas de base de données, on dump les données dans le Profiler
-            //dump($carArticle);
+            // Debug : vérifier que l'objet est bien hydraté
+            dump($carArticle); // Symfony Profiler affichera toutes les données
 
             // Message de confirmation
             $this->addFlash('success', 'L’article a été validé !');
 
-            // Réinitialiser le formulaire (optionnel)
-            $carArticle = new CarArticle();
-            $form = $this->createForm(CarArticleType::class, $carArticle);
         }
 
         // 5️⃣ Rendu du template

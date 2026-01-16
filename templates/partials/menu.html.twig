@@ -1,9 +1,28 @@
-<nav class="menu">
-    <ul>
-        <li><a href="{{ path('home') }}">Accueil</a></li>
-        <li><a href="{{ path('sport_auto') }}">Sport Auto</a></li>
-        <li><a href="{{ path('store') }}">Store</a></li>
-        <li><a href="{{ path('contact') }}">Contact</a></li>
-        <li><a href="{{ path('car_article_new') }}">Nouvel Article</a></li> 
-    </ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow">
+	<div class="container">
+		<a class="navbar-brand fw-bold" href="{{ path('home') }}">🏎 WEC / Ferrari</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ms-auto fw-semibold">
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('home') }}">Accueil</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('sport_auto') }}">Sport Auto</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('store') }}">Store</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('contact') }}">Contact</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('car_article_new') }}">Nouvel Article</a>
+				</li>
+			</ul>
+		</div>
+	</div>
 </nav>
