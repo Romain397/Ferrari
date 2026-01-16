@@ -26,7 +26,7 @@ class CarArticle
 
     #[Assert\NotBlank(message: 'Le contenu est obligatoire')]
     #[Assert\Length(
-        min: 10,
+        min: 0,
         max: 1000,
         minMessage: 'Le contenu doit contenir au moins {{ limit }} caractères',
         maxMessage: 'Le contenu ne peut pas dépasser {{ limit }} caractères'
@@ -35,11 +35,12 @@ class CarArticle
 
     private bool $highlight = false;
 
-    #[Assert\Positive(message: 'L\'année doit être un nombre positif')]
+    #[Assert\NotBlank(message: 'L’année est obligatoire')]
+    #[Assert\Positive(message: 'L’année doit être un nombre positif')]
     #[Assert\Range(
         min: 1900,
         max: 2100,
-        notInRangeMessage: 'L\'année doit être comprise entre {{ min }} et {{ max }}'
+        notInRangeMessage: 'L’année doit être comprise entre {{ min }} et {{ max }}'
     )]
     private ?int $year = null;
 
@@ -50,7 +51,7 @@ class CarArticle
         return $this->model;
     }
 
-    public function setModel(string $model): self
+    public function setModel(?string $model): self
     {
         $this->model = $model;
         return $this;
@@ -61,7 +62,7 @@ class CarArticle
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
         return $this;
@@ -72,7 +73,7 @@ class CarArticle
         return $this->content;
     }
 
-    public function setContent(string $content): self
+    public function setContent(?string $content): self
     {
         $this->content = $content;
         return $this;
@@ -94,9 +95,21 @@ class CarArticle
         return $this->year;
     }
 
-    public function setYear(int $year): self
+    public function setYear(?int $year): self
     {
         $this->year = $year;
         return $this;
+    }
+
+    // ---------- Debug helper ----------
+    public function toArray(): array
+    {
+        return [
+            'model' => $this->model,
+            'title' => $this->title,
+            'content' => $this->content,
+            'highlight' => $this->highlight,
+            'year' => $this->year,
+        ];
     }
 }

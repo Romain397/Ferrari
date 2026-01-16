@@ -26,7 +26,7 @@ class CarArticleController extends AbstractController
         // 4️⃣ Vérifier si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
             // Ici, comme on n'a pas de base de données, on dump les données dans le Profiler
-            dump($carArticle);
+            //dump($carArticle);
 
             // Message de confirmation
             $this->addFlash('success', 'L’article a été validé !');
