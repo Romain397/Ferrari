@@ -21,45 +21,27 @@
 			{# Formulaire avec désactivation de la validation HTML5 pour tester la validation serveur #}
 			{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-			{# Affichage erreurs globales #}
-			{% if form.vars.errors|length > 0 %}
-				<div class="alert alert-danger">
-					{% for error in form.vars.errors %}
-						<p>{{ error.message }}</p>
-					{% endfor %}
-				</div>
-			{% endif %}
-
 			{# Champs du formulaire avec Bootstrap #}
 			<div class="mb-3">
-				{{ form_label(form.model) }}
-				{{ form_widget(form.model, {'attr': {'class': 'form-control'}}) }}
-				{{ form_errors(form.model) }}
+				{{ form_row(form.model, {'attr': {'class': 'form-control'}}) }}
 			</div>
 
 			<div class="mb-3">
-				{{ form_label(form.title) }}
-				{{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
-				{{ form_errors(form.title) }}
+				{{ form_row(form.title, {'attr': {'class': 'form-control'}}) }}
 			</div>
 
 			<div class="mb-3">
-				{{ form_label(form.content) }}
-				{{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 5}}) }}
-				{{ form_errors(form.content) }}
-			</div>
-
-			<div class="mb-3 form-check">
-				{{ form_widget(form.highlight, {'attr': {'class': 'form-check-input'}}) }}
-				{{ form_label(form.highlight, null, {'label_attr': {'class': 'form-check-label'}}) }}
-				{{ form_errors(form.highlight) }}
+				{{ form_row(form.content, {'attr': {'class': 'form-control', 'rows': 5}}) }}
 			</div>
 
 			<div class="mb-3">
-				{{ form_label(form.year) }}
-				{{ form_widget(form.year, {'attr': {'class': 'form-control'}}) }}
-				{{ form_errors(form.year) }}
+				{{ form_row(form.highlight, {'attr': {'class': 'form-check-input'}}) }}
 			</div>
+
+			<div class="mb-3">
+				{{ form_row(form.year, {'attr': {'class': 'form-control'}}) }}
+			</div>
+
 
 			<button type="submit" class="btn btn-primary mt-3">Valider</button>
 
