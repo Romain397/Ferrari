@@ -19,9 +19,27 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{ path('contact') }}">Contact</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('car_article_new') }}">Nouvel Article</a>
-				</li>
+
+				{% if app.user %}
+					{% if 'ROLE_ADMIN' in app.user.roles %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('admin_dashboard') }}">Admin</a>
+						</li>
+					{% endif %}
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+					</li>
+					<li class="nav-item position-relative">
+						<a class="nav-link" href="{{ path('cart_index') }}">
+							Panier
+							<span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark text-danger">0</span>
+						</a>
+					</li>
+				{% else %}
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('app_login') }}">Login / Sign In</a>
+					</li>
+				{% endif %}
 			</ul>
 		</div>
 	</div>

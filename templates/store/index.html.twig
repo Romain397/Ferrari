@@ -4,13 +4,25 @@
 {% endblock %}
 
 {% block main %}
-	<h1>Ferrari Store</h1>
-
-	<ul>
-		<li>T-shirt Ferrari</li>
-		<li>Casquette Ferrari</li>
-		<li>Miniature Ferrari 499P</li>
-	</ul>
-
-	<p>(Boutique fictive – panier plus tard)</p>
+	<h1 class="text-danger mb-4">Store</h1>
+	<div class="row">
+		{% for product in products %}
+			<div class="col-md-3 mb-4">
+				<div class="card h-100 shadow-sm">
+					{% if product.image %}
+						<img src="{{ asset(product.image) }}" class="card-img-top" alt="{{ product.title }}">
+					{% endif %}
+					<div class="card-body">
+						<h5 class="card-title">{{ product.title }}</h5>
+						<p class="card-text">{{ product.description|slice(0,50) ~ '...' }}</p>
+						<p class="text-danger">{{ product.price }}
+							€</p>
+						<a href="#" class="btn btn-danger w-100">Ajouter au panier</a>
+					</div>
+				</div>
+			</div>
+		{% else %}
+			<p>Aucun produit pour le moment.</p>
+		{% endfor %}
+	</div>
 {% endblock %}

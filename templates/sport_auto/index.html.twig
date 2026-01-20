@@ -1,23 +1,28 @@
 {% extends 'base.html.twig' %}
-{% import 'macros/ui.html.twig' as ui %}
 
-{% block title %}
-	Sport Auto – Palmarès Ferrari
+{% block title %}Sport Auto
 {% endblock %}
 
 {% block main %}
-	<h1>{{ 'palmarès ferrari wec'|upper }}</h1>
-
-	{% for item in palmares %}
-		{{ ui.card(
-            item.year,
-            item.title|capitalize,
-            item.major
-        ) }}
-	{% endfor %}
-
-	<p class="summary">
-		Nombre total de résultats :
-		{{ palmares|length }}
-	</p>
+	<h1 class="text-danger mb-4">Sport Auto</h1>
+	<div class="row">
+		{% for race in races %}
+			<div class="col-md-4 mb-4">
+				<div class="card h-100 shadow-sm">
+					{% if race.image %}
+						<img src="{{ asset(race.image) }}" class="card-img-top" alt="{{ race.circuit }}">
+					{% endif %}
+					<div class="card-body">
+						<h5 class="card-title">{{ race.circuit }}</h5>
+						<p class="card-text">{{ race.formula }}
+							-
+							{{ race.date|date('d/m/Y') }}</p>
+						<a href="#" class="btn btn-danger w-100">Voir détails</a>
+					</div>
+				</div>
+			</div>
+		{% else %}
+			<p>Aucune course pour le moment.</p>
+		{% endfor %}
+	</div>
 {% endblock %}
