@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CarArticleType extends AbstractType
@@ -26,7 +27,8 @@ class CarArticleType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Description',
-                'attr' => ['placeholder' => 'Description de la voiture'],
+                'required' => false,
+                'attr' => ['placeholder' => 'Description de la voiture (optionnelle)'],
             ])
             ->add('highlight', CheckboxType::class, [
                 'label' => 'Mettre en avant ⭐',
@@ -35,6 +37,16 @@ class CarArticleType extends AbstractType
             ->add('year', IntegerType::class, [
                 'label' => 'Année',
                 'attr' => ['placeholder' => 'Ex: 2025'],
+            ])
+            ->add('image', TextType::class, [
+                'label' => 'Image (URL ou chemin)',
+                'required' => false,
+                'attr' => ['placeholder' => '/images/499p.jpg'],
+            ])
+            ->add('video', UrlType::class, [
+                'label' => 'Vidéo (URL)',
+                'required' => false,
+                'attr' => ['placeholder' => 'https://youtu.be/...'],
             ]);
     }
 
@@ -42,6 +54,7 @@ class CarArticleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CarArticle::class,
+            'attr' => ['novalidate' => 'novalidate'], // désactive la validation HTML5
         ]);
     }
 }

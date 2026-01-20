@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\CarArticle;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,14 +11,13 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function home(): Response
+    public function home(EntityManagerInterface $em): Response
     {
-        $cars = [
-            'Ferrari 499P',
-            'Ferrari 488 GTE',
-            'Ferrari 458 Italia',
-            'Ferrari FXX-K'
-        ];
+        // Récupérer tous les articles depuis la base
+        $cars = $em->getRepository(CarArticle::class)->findBy(
+            [],
+            ['highlight' => 'DESC', 'year' => 'DESC'] // mettre à la une puis plus récent
+        );
 
         return $this->render('home/home.html.twig', [
             'cars' => $cars

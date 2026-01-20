@@ -2,10 +2,18 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\Entity]
 class CarArticle
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: 'Le modèle est obligatoire')]
     #[Assert\Length(
         min: 2,
@@ -15,6 +23,7 @@ class CarArticle
     )]
     private ?string $model = null;
 
+    #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: 'Le titre est obligatoire')]
     #[Assert\Length(
         min: 3,
@@ -24,15 +33,17 @@ class CarArticle
     )]
     private ?string $title = null;
 
-    // Le champ description n’est plus obligatoire
+    #[ORM\Column(type: 'text', nullable: true)]
     #[Assert\Length(
         max: 1000,
         maxMessage: 'Le contenu ne peut pas dépasser {{ limit }} caractères'
     )]
     private ?string $content = null;
 
+    #[ORM\Column]
     private bool $highlight = false;
 
+    #[ORM\Column]
     #[Assert\NotBlank(message: 'L’année est obligatoire')]
     #[Assert\Positive(message: 'L’année doit être un nombre positif')]
     #[Assert\Range(
@@ -42,7 +53,21 @@ class CarArticle
     )]
     private ?int $year = null;
 
-    // ---------- Getters & Setters ----------
+    // 🖼️ Image principale (page d’accueil)
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    // 🎬 Vidéo (URL YouTube / Vimeo / MP4)
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: 'La vidéo doit être une URL valide')]
+    private ?string $video = null;
+
+    // ───────────── GETTERS / SETTERS ─────────────
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getModel(): ?string
     {
@@ -99,7 +124,29 @@ class CarArticle
         return $this;
     }
 
-    // ---------- Debug helper ----------
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getVideo(): ?string
+    {
+        return $this->video;
+    }
+
+    public function setVideo(?string $video): self
+    {
+        $this->video = $video;
+        return $this;
+    }
+
+    // 🛠 Debug helper
     public function toArray(): array
     {
         return [
@@ -108,6 +155,8 @@ class CarArticle
             'content' => $this->content,
             'highlight' => $this->highlight,
             'year' => $this->year,
+            'image' => $this->image,
+            'video' => $this->video,
         ];
     }
 }

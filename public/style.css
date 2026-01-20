@@ -91,64 +91,64 @@ p {
 }
 
 /* ----------------------------------------- */
-/* CARTES (voitures / store)                 */
+/* CARTES PREMIUM (VOITURES / STORE)         */
 /* ----------------------------------------- */
 .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 30px;
+    justify-content: center; /* centrage des cartes */
     margin-top: 40px;
 }
 
-.card {
+.cards .card {
     background-color: #1c1c1c;
     border: none;
-    padding: 25px;
     border-radius: 20px;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-    position: relative;
     overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
+    min-width: 320px; /* largeur minimale */
+    max-width: 360px; /* largeur maximale */
+    height: auto; /* hauteur automatique selon contenu */
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-.card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
+.cards .card img {
     width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 40, 0, 0.15),
-        rgba(0, 0, 0, 0.15)
-    );
-    border-radius: 20px;
-    z-index: 0;
+    display: block;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    object-fit: cover;
+    height: 220px; /* uniforme */
 }
 
-.card h3 {
-    color: #ff2800;
-    margin-bottom: 10px;
-    font-weight: 700;
-    position: relative;
-    z-index: 1;
+.cards .card .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.card p {
-    color: #f5f5f5;
-    position: relative;
-    z-index: 1;
+.cards .card .card-body p {
+    flex-grow: 1;
 }
 
-.card:hover {
-    transform: translateY(-12px) scale(1.02);
+.cards .card.highlight {
+    border: 2px solid #ffd700;
+    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4);
+}
+
+.cards .card:hover {
+    transform: translateY(-10px) scale(1.03);
     box-shadow: 0 20px 40px rgba(255, 40, 0, 0.5);
 }
 
-/* Highlighted card style */
-.card.highlight {
-    border: 2px solid #ffd700;
-    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.5);
+.cards .badge {
+    z-index: 10;
 }
 
 /* ----------------------------------------- */
@@ -242,4 +242,14 @@ footer {
     font-size: 14px;
     border-top: 1px solid #333;
     border-radius: 20px 20px 0 0;
+}
+
+/* ----------------------------------------- */
+/* RESPONSIVE GRID POUR MOBILE               */
+/* ----------------------------------------- */
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: column;
+        gap: 20px;
+    }
 }

@@ -18,8 +18,9 @@
 				{% endfor %}
 			{% endfor %}
 
+			{# Début du formulaire #}
+			{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-			{# Champs du formulaire avec Bootstrap #}
 			<div class="mb-3">
 				{{ form_row(form.model, {'attr': {'class': 'form-control'}}) }}
 			</div>
@@ -32,7 +33,7 @@
 				{{ form_row(form.content, {'attr': {'class': 'form-control', 'rows': 5}}) }}
 			</div>
 
-			<div class="mb-3">
+			<div class="mb-3 form-check">
 				{{ form_row(form.highlight, {'attr': {'class': 'form-check-input'}}) }}
 			</div>
 
@@ -40,8 +41,17 @@
 				{{ form_row(form.year, {'attr': {'class': 'form-control'}}) }}
 			</div>
 
+			{# Champ Image #}
+			<div class="mb-3">
+				{{ form_row(form.image, {'attr': {'class': 'form-control', 'placeholder': '/images/499p.jpg'}}) }}
+			</div>
 
-			<button type="submit" class="btn btn-primary mt-3">Valider</button>
+			{# Champ Vidéo #}
+			<div class="mb-3">
+				{{ form_row(form.video, {'attr': {'class': 'form-control', 'placeholder': 'https://youtu.be/...'}}) }}
+			</div>
+
+			<button type="submit" class="btn btn-danger mt-3">Créer l’article</button>
 
 			{{ form_end(form) }}
 		</div>
