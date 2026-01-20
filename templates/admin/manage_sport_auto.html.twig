@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gérer Sport Auto
+{% endblock %}
+
+{% block main %}
+	<h1 class="mb-4 text-center">Gérer le Sport Auto</h1>
+
+	<div class="mb-4">
+		<h3>Ajouter une course</h3>
+		{{ form_start(form) }}
+		{{ form_row(form.title) }}
+		{{ form_row(form.category) }}
+		{{ form_row(form.description) }}
+		{{ form_row(form.circuitImage) }}
+		{{ form_row(form.video) }}
+		{{ form_row(form.date) }}
+		<button type="submit" class="btn btn-danger mt-2">Ajouter la course</button>
+		{{ form_end(form) }}
+	</div>
+
+	<h3>Courses existantes</h3>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Titre</th>
+				<th>Catégorie</th>
+				<th>Date</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for race in races %}
+				<tr>
+					<td>{{ race.id }}</td>
+					<td>{{ race.title }}</td>
+					<td>{{ race.category }}</td>
+					<td>{{ race.date|date('d/m/Y') }}</td>
+					<td>
+						<a href="#" class="btn btn-sm btn-warning">Modifier</a>
+						<a href="#" class="btn btn-sm btn-danger">Supprimer</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5" class="text-center">Aucune course pour le moment.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

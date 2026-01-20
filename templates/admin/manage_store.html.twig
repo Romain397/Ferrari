@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gérer Store
+{% endblock %}
+
+{% block main %}
+	<h1 class="mb-4 text-center">Gérer le Store</h1>
+
+	<div class="mb-4">
+		<h3>Ajouter un produit</h3>
+		{{ form_start(form) }}
+		{{ form_row(form.title) }}
+		{{ form_row(form.type) }}
+		{{ form_row(form.description) }}
+		{{ form_row(form.price) }}
+		{{ form_row(form.image) }}
+		<button type="submit" class="btn btn-danger mt-2">Ajouter le produit</button>
+		{{ form_end(form) }}
+	</div>
+
+	<h3>Produits existants</h3>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Titre</th>
+				<th>Type</th>
+				<th>Prix (€)</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for product in products %}
+				<tr>
+					<td>{{ product.id }}</td>
+					<td>{{ product.title }}</td>
+					<td>{{ product.type }}</td>
+					<td>{{ product.price }}</td>
+					<td>
+						<a href="#" class="btn btn-sm btn-warning">Modifier</a>
+						<a href="#" class="btn btn-sm btn-danger">Supprimer</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5" class="text-center">Aucun produit pour le moment.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

@@ -11,13 +11,19 @@ class SportAuto
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: "string", length: 100)]
     private string $title;
 
+    #[ORM\Column(type: "string", length: 100)]
+    private string $location; // Lieu de la course
+
+    #[ORM\Column(type: "string", length: 50)]
+    private string $carCategory; // Formule 1, WEC, GT, etc.
+
     #[ORM\Column(type: "text", nullable: true)]
-    private ?string $description = null;
+    private ?string $description = null; // Petite description
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $circuitImage = null;
@@ -28,10 +34,7 @@ class SportAuto
     #[ORM\Column(type: "datetime")]
     private \DateTimeInterface $date;
 
-    #[ORM\Column(type: "string", length: 50)]
-    private string $category; // Exemple: "Formule 1", "WEC"
-
-    // GETTERS / SETTERS
+    // ===== GETTERS / SETTERS =====
 
     public function getId(): ?int
     {
@@ -45,6 +48,26 @@ class SportAuto
     public function setTitle(string $title): self
     {
         $this->title = $title;
+        return $this;
+    }
+
+    public function getLocation(): string
+    {
+        return $this->location;
+    }
+    public function setLocation(string $location): self
+    {
+        $this->location = $location;
+        return $this;
+    }
+
+    public function getCarCategory(): string
+    {
+        return $this->carCategory;
+    }
+    public function setCarCategory(string $carCategory): self
+    {
+        $this->carCategory = $carCategory;
         return $this;
     }
 
@@ -85,16 +108,6 @@ class SportAuto
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-        return $this;
-    }
-
-    public function getCategory(): string
-    {
-        return $this->category;
-    }
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
         return $this;
     }
 }
