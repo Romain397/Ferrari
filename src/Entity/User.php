@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -15,7 +16,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 50)]
+    #[ORM\Column(length: 50)]
     private ?string $firstName = null;
 
     #[ORM\Column(type: 'string', length: 50)]
@@ -29,6 +30,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
+
+    private UserPasswordHasher $passwordHasher;
+
+    public function __construct(UserPasswordHasher $passwordHasher) {
+        $this->passwordHasher = $passwordHasher;
+    }
 
     // ===== Getters / Setters =====
 
@@ -91,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setPassword(string $password): self
     {
-        $this->password = $password;
+        $this->password = $this->passwordHasher->hashPassword($this, $password);
         return $this;
     }
 

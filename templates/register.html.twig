@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription
+{% endblock %}
+
+{% block main %}
+	<div class="row justify-content-center">
+		<div class="col-md-4">
+			<h2 class="text-center text-danger mb-4">Inscription</h2>
+
+			{% for message in app.flashes('error') %}
+				<div class="alert alert-danger">
+					{{ message }}
+				</div>
+			{% endfor %}
+
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
+
+			<form method="post">
+				<div class="mb-3">
+					<label for="email" class="form-label">Email</label>
+					<input type="email" name="email" id="email" class="form-control" placeholder="ex: pilote@ferrari.com" required>
+				</div>
+
+				<div class="mb-3">
+					<label for="password" class="form-label">Mot de passe</label>
+					<input type="password" name="password" id="password" class="form-control" required>
+				</div>
+
+				<button type="submit" class="btn btn-danger w-100">
+					Créer mon compte
+				</button>
+			</form>
+
+			<div class="text-center mt-3">
+				<a href="{{ path('app_login') }}" class="text-decoration-none">
+					Déjà un compte ?
+					<strong>Login</strong>
+				</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
