@@ -2,17 +2,17 @@
 
 namespace App\Form;
 
-use App\Entity\CarArticle;
+use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CarArticleType extends AbstractType
+class PostType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -34,7 +34,7 @@ class CarArticleType extends AbstractType
                 'label' => 'Mettre en avant ⭐',
                 'required' => false,
             ])
-            ->add('year', IntegerType::class, [
+            ->add('year', DateType::class, [
                 'label' => 'Année',
                 'attr' => ['placeholder' => 'Ex: 2025'],
             ])
@@ -53,7 +53,7 @@ class CarArticleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => CarArticle::class,
+            'data_class' => Post::class,
             'attr' => ['novalidate' => 'novalidate'], // désactive la validation HTML5
         ]);
     }

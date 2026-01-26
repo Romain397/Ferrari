@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% import 'macros/ui.html.twig' as ui %}
+
+{% block title %}Accueil
+{% endblock %}
+
+{% block main %}
+	<h1 class="mb-4 text-center">{{ 'ferrari – histoire & héritage'|upper }}</h1>
+
+	<p class="text-center mb-5">
+		Ferrari est une marque emblématique du sport automobile, fondée par Enzo Ferrari.
+				    Présente en endurance et en Formule 1, la Scuderia incarne la performance et la passion.
+	</p>
+
+	<h2 class="mb-4">Voitures emblématiques</h2>
+
+	<div class="cards row g-4">
+		{% for post in posts %}
+			<div class="col-md-4">
+				<div class="card {% if post.highlight %}highlight{% endif %} h-100 position-relative">
+
+					{% if post.image %}
+						<img src="{{ post.image }}" class="card-img-top rounded-4" style="height: 220px; object-fit: cover;" alt="{{ post.model }}">
+					{% endif %}
+
+					<div class="card-body d-flex flex-column">
+						<h3>{{ post.title }}
+							<small class="text-muted">({{ post.model }})</small>
+						</h3>
+
+						{% if post.content %}
+							<p class="flex-grow-1">{{ post.content }}</p>
+						{% endif %}
+
+						<p class="text-muted mb-2">Année :
+							{{ post.year }}</p>
+
+						{% if post.video %}
+							<div class="ratio ratio-16x9 mt-2">
+								<iframe src="{{ post.video }}" title="Vidéo {{ post.model }}" allowfullscreen></iframe>
+							</div>
+						{% endif %}
+					</div>
+
+					{% if post.highlight %}
+						<div class="badge bg-danger position-absolute top-0 start-50 translate-middle-x mt-2 px-3 py-2 fs-6 rounded-pill shadow">À la une ⭐</div>
+					{% endif %}
+				</div>
+			</div>
+		{% else %}
+			<p class="text-center">Aucune voiture enregistrée pour le moment.</p>
+		{% endfor %}
+	</div>
+
+
+	<p class="summary mt-5 text-center">
+		Nombre de modèles présentés :
+		<strong>{{ posts|length }}</strong>
+	</p>
+{% endblock %}

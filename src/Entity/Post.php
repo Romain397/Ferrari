@@ -2,18 +2,26 @@
 
 namespace App\Entity;
 
+use DateTime;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+enum Category: string
+{
+    case Car = 'Voiture';
+    case Race = 'Course';
+}
+
 #[ORM\Entity]
-class CarArticle
+class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable:true)]
     #[Assert\NotBlank(message: 'Le modèle est obligatoire')]
     #[Assert\Length(
         min: 2,
@@ -23,7 +31,7 @@ class CarArticle
     )]
     private ?string $model = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Le titre est obligatoire')]
     #[Assert\Length(
         min: 3,
@@ -45,13 +53,7 @@ class CarArticle
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'L’année est obligatoire')]
-    #[Assert\Positive(message: 'L’année doit être un nombre positif')]
-    #[Assert\Range(
-        min: 1900,
-        max: 2100,
-        notInRangeMessage: 'L’année doit être comprise entre {{ min }} et {{ max }}'
-    )]
-    private ?int $year = null;
+    private DateTime $date;
 
     // 🖼️ Image principale (page d’accueil)
     #[ORM\Column(length: 255, nullable: true)]
@@ -61,6 +63,13 @@ class CarArticle
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Url(message: 'La vidéo doit être une URL valide')]
     private ?string $video = null;
+
+    #[ORM\Column(type: Types::ENUM)]
+    public Category $category;
+
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     // ───────────── GETTERS / SETTERS ─────────────
 
@@ -113,14 +122,14 @@ class CarArticle
         return $this;
     }
 
-    public function getYear(): ?int
+    public function getDate(): DateTime
     {
-        return $this->year;
+        return $this->date;
     }
 
-    public function setYear(?int $year): self
+    public function setDate(DateTime $date): self
     {
-        $this->year = $year;
+        $this->date = $date;
         return $this;
     }
 
@@ -154,9 +163,41 @@ class CarArticle
             'title' => $this->title,
             'content' => $this->content,
             'highlight' => $this->highlight,
-            'year' => $this->year,
+            'date' => $this->date,
             'image' => $this->image,
             'video' => $this->video,
         ];
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of category
+     */ 
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Set the value of category
+     *
+     * @return  self
+     */ 
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
     }
 }
