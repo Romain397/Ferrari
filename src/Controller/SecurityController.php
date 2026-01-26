@@ -38,7 +38,7 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('app_register');
             }
 
-            $user = new User();
+            $user = new User($passwordHasher);
             $user->setEmail($email);
             $user->setRoles(['ROLE_USER']);
 

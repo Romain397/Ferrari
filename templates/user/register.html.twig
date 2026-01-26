@@ -20,21 +20,13 @@
 				</div>
 			{% endfor %}
 
-			<form method="post">
-				<div class="mb-3">
-					<label for="email" class="form-label">Email</label>
-					<input type="email" name="email" id="email" class="form-control" placeholder="ex: pilote@ferrari.com" required>
-				</div>
-
-				<div class="mb-3">
-					<label for="password" class="form-label">Mot de passe</label>
-					<input type="password" name="password" id="password" class="form-control" required>
-				</div>
-
-				<button type="submit" class="btn btn-danger w-100">
-					Créer mon compte
-				</button>
-			</form>
+			{{form_start(form)}}
+			{{form_row(form.firstName)}}
+			{{form_row(form.lastName)}}
+			{{form_row(form.email)}}
+			{{form_row(form.password)}}
+			<input type="submit" value="S'inscrire" />
+			{{form_end(form)}}
 
 			<div class="text-center mt-3">
 				<a href="{{ path('app_login') }}" class="text-decoration-none">

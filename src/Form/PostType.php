@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Config\Category;
 use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -9,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,17 +31,18 @@ class PostType extends AbstractType
             ->add('content', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
-                'attr' => ['placeholder' => 'Description de la voiture (optionnelle)'],
+                'attr' => ['placeholder' => 'Description (optionnelle)'],
             ])
             ->add('highlight', CheckboxType::class, [
                 'label' => 'Mettre en avant ⭐',
                 'required' => false,
             ])
-            ->add('year', DateType::class, [
+            ->add('year', IntegerType::class, [
                 'label' => 'Année',
-                'attr' => ['placeholder' => 'Ex: 2025'],
+                'attr' => ['placeholder' => 'Ex: 2025', "min" => 1930, "max" => date("Y")],
+
             ])
-            ->add('image', TextType::class, [
+            ->add('image', UrlType::class, [
                 'label' => 'Image (URL ou chemin)',
                 'required' => false,
                 'attr' => ['placeholder' => '/images/499p.jpg'],
@@ -47,7 +51,12 @@ class PostType extends AbstractType
                 'label' => 'Vidéo (URL)',
                 'required' => false,
                 'attr' => ['placeholder' => 'https://youtu.be/...'],
-            ]);
+            ])
+            ->add('category', EnumType::class, [
+                'label' => 'Catégorie',
+                "class" => Category::class
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

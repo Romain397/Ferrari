@@ -2,16 +2,12 @@
 
 namespace App\Entity;
 
+use App\Config\Category;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-enum Category: string
-{
-    case Car = 'Voiture';
-    case Race = 'Course';
-}
 
 #[ORM\Entity]
 class Post
@@ -53,7 +49,7 @@ class Post
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'L’année est obligatoire')]
-    private DateTime $date;
+    private int $year;
 
     // 🖼️ Image principale (page d’accueil)
     #[ORM\Column(length: 255, nullable: true)]
@@ -121,18 +117,7 @@ class Post
         $this->highlight = $highlight;
         return $this;
     }
-
-    public function getDate(): DateTime
-    {
-        return $this->date;
-    }
-
-    public function setDate(DateTime $date): self
-    {
-        $this->date = $date;
-        return $this;
-    }
-
+    
     public function getImage(): ?string
     {
         return $this->image;
@@ -197,6 +182,26 @@ class Post
     public function setCategory($category)
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of year
+     */ 
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * Set the value of year
+     *
+     * @return  self
+     */ 
+    public function setYear($year)
+    {
+        $this->year = $year;
 
         return $this;
     }

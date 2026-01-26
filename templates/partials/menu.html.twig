@@ -28,14 +28,14 @@
 				{% if app.user %}
 					{% if 'ROLE_ADMIN' in app.user.roles %}
 						<li class="nav-item">
-							<a class="nav-link fw-bold text-warning" href="{{ path('admin_dashboard') }}">
+							<a class="nav-link fw-bold text-warning" href="{{ path('dashboard') }}">
 								Admin
 							</a>
 						</li>
 					{% endif %}
 
 					<li class="nav-item position-relative">
-						<a class="nav-link" href="{{ path('cart_index') }}">
+						<a class="nav-link" href="#">
 							Panier
 							<span id="cart-count" class="position-absolute top-0 start-100 translate-middle
 																             badge rounded-pill bg-dark text-danger">

@@ -2,15 +2,10 @@
 
 namespace App\Entity;
 
+use App\Config\Type;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
-enum Type: string
-{
-    case Cap = 'Casquette';
-    case TShirt = 'T-shirt';
-}
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product

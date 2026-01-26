@@ -50,31 +50,30 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $doctrine->getManager();
+            $post->setUser($this->getUser());
             $em->persist($post);
             $em->flush();
 
             $this->addFlash('success', 'Article ajouté avec succès !');
-            return $this->redirectToRoute('admin_manage_posts');
+            return $this->redirectToRoute('manage_posts');
         }
 
-        return $this->render('admin/manage_posts.html.twig', [
+        return $this->render('post/manage_posts.html.twig', [
             'posts' => $posts,
             'form' => $form->createView(),
         ]);
     }
 
     #[Route('/posts/delete/{id}', name: 'delete_post')]
-    public function delete(ManagerRegistry $doctrine, int $id): Response
+    public function delete(ManagerRegistry $doctrine, Post $post): Response
     {
         $em = $doctrine->getManager();
-        $article = $em->getRepository(Post::class)->find($id);
-
-        if ($article) {
-            $em->remove($article);
+        if ($post) {
+            $em->remove($post);
             $em->flush();
             $this->addFlash('success', 'Article supprimé avec succès !');
         }
 
-        return $this->redirectToRoute('admin_manage_posts');
+        return $this->redirectToRoute('manage_posts');
     }
 }
