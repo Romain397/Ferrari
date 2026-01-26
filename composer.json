@@ -82,6 +82,7 @@
         }
     },
     "require-dev": {
+        "phpunit/phpunit": "*",
         "symfony/debug-bundle": "8.0.*",
         "symfony/phpunit-bridge": "^8.0",
         "symfony/stopwatch": "8.0.*",
