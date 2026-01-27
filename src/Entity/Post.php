@@ -17,7 +17,6 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    #[Assert\NotBlank(message: 'Le modèle est obligatoire')]
     #[Assert\Length(min: 2, max: 50)]
     private ?string $model = null;
 
@@ -37,6 +36,7 @@ class Post
     private ?int $year = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: 'L’image doit être une URL valide')]
     private ?string $image = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -44,6 +44,7 @@ class Post
     private ?string $video = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: 'L’image du circuit doit être une URL valide')]
     private ?string $circuitImage = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -64,7 +65,7 @@ class Post
         $this->createdAt = new \DateTimeImmutable();
     }
 
-    // ───────────── GETTERS / SETTERS ─────────────
+    /* ───────────── GETTERS / SETTERS ───────────── */
 
     public function getId(): ?int
     {
@@ -75,7 +76,6 @@ class Post
     {
         return $this->model;
     }
-
     public function setModel(?string $model): self
     {
         $this->model = $model;
@@ -86,7 +86,6 @@ class Post
     {
         return $this->title;
     }
-
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -97,7 +96,6 @@ class Post
     {
         return $this->content;
     }
-
     public function setContent(?string $content): self
     {
         $this->content = $content;
@@ -108,7 +106,6 @@ class Post
     {
         return $this->highlight;
     }
-
     public function setHighlight(bool $highlight): self
     {
         $this->highlight = $highlight;
@@ -119,7 +116,6 @@ class Post
     {
         return $this->year;
     }
-
     public function setYear(?int $year): self
     {
         $this->year = $year;
@@ -130,7 +126,6 @@ class Post
     {
         return $this->image;
     }
-
     public function setImage(?string $image): self
     {
         $this->image = $image;
@@ -141,7 +136,6 @@ class Post
     {
         return $this->video;
     }
-
     public function setVideo(?string $video): self
     {
         $this->video = $video;
@@ -152,7 +146,6 @@ class Post
     {
         return $this->circuitImage;
     }
-
     public function setCircuitImage(?string $circuitImage): self
     {
         $this->circuitImage = $circuitImage;
@@ -163,7 +156,6 @@ class Post
     {
         return $this->raceDate;
     }
-
     public function setRaceDate(?\DateTime $raceDate): self
     {
         $this->raceDate = $raceDate;
@@ -174,7 +166,6 @@ class Post
     {
         return $this->category;
     }
-
     public function setCategory(Category $category): self
     {
         $this->category = $category;
@@ -185,8 +176,7 @@ class Post
     {
         return $this->user;
     }
-
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
         return $this;
@@ -197,48 +187,45 @@ class Post
         return $this->createdAt;
     }
 
-    // Debug helper
-    public function toArray(): array
-    {
-        return [
-            'model' => $this->model,
-            'title' => $this->title,
-            'content' => $this->content,
-            'highlight' => $this->highlight,
-            'createdAt' => $this->createdAt,
-            'image' => $this->image,
-            'video' => $this->video,
-        ];
-    }
+    /* ───────────── VALIDATION CONDITIONNELLE ───────────── */
 
-    // ───────────── VALIDATION PERSONNALISÉE ─────────────
     #[Assert\Callback]
     public function validate(ExecutionContextInterface $context): void
     {
-        // Si c'est une VOITURE (Home)
         if ($this->category === Category::Voiture) {
-            // Ne pas permettre les champs de course
-            if (!empty($this->circuitImage)) {
-                $context->buildViolation('Pour une voiture, l\'image du circuit ne doit pas être remplie.')
-                    ->atPath('circuitImage')
+
+            if (empty($this->model)) {
+                $context->buildViolation('Le modèle est obligatoire pour une voiture.')
+                    ->atPath('model')
                     ->addViolation();
             }
-            if (!empty($this->raceDate)) {
-                $context->buildViolation('Pour une voiture, la date de course ne doit pas être remplie.')
-                    ->atPath('raceDate')
-                    ->addViolation();
-            }
-            // Image de voiture obligatoire
+
             if (empty($this->image)) {
-                $context->buildViolation('Pour une voiture, l\'image est obligatoire.')
+                $context->buildViolation('L’image de la voiture est obligatoire.')
                     ->atPath('image')
                     ->addViolation();
             }
+
+            if (!empty($this->circuitImage)) {
+                $context->buildViolation('Une voiture ne peut pas avoir d’image de circuit.')
+                    ->atPath('circuitImage')
+                    ->addViolation();
+            }
+
+            if (!empty($this->raceDate)) {
+                $context->buildViolation('Une voiture ne peut pas avoir de date de course.')
+                    ->atPath('raceDate')
+                    ->addViolation();
+            }
         }
-        // Si c'est une COURSE (Sport Auto)
-        elseif ($this->category === Category::Course) {
-            // Pour une course, on accepte tous les champs
-            // Les champs voiture seront simplement ignorés (masqués en CSS/JS au formulaire)
+
+        if ($this->category === Category::Course) {
+
+            if (empty($this->circuitImage)) {
+                $context->buildViolation('L’image du circuit est obligatoire pour une course.')
+                    ->atPath('circuitImage')
+                    ->addViolation();
+            }
         }
     }
 }
