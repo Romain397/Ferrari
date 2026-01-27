@@ -3,11 +3,9 @@
 namespace App\Entity;
 
 use App\Config\Category;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 #[ORM\Entity]
 class Post
@@ -17,31 +15,18 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50, nullable:true)]
+    #[ORM\Column(length: 50, nullable: true)]
     #[Assert\NotBlank(message: 'Le modèle est obligatoire')]
-    #[Assert\Length(
-        min: 2,
-        max: 50,
-        minMessage: 'Le modèle doit contenir au moins {{ limit }} caractères',
-        maxMessage: 'Le modèle ne peut pas dépasser {{ limit }} caractères'
-    )]
+    #[Assert\Length(min: 2, max: 50)]
     private ?string $model = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Le titre est obligatoire')]
-    #[Assert\Length(
-        min: 3,
-        max: 100,
-        minMessage: 'Le titre doit contenir au moins {{ limit }} caractères',
-        maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères'
-    )]
+    #[Assert\Length(min: 3, max: 100)]
     private ?string $title = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Assert\Length(
-        max: 1000,
-        maxMessage: 'Le contenu ne peut pas dépasser {{ limit }} caractères'
-    )]
+    #[Assert\Length(max: 1000)]
     private ?string $content = null;
 
     #[ORM\Column]
@@ -51,21 +36,27 @@ class Post
     #[Assert\NotBlank(message: 'L’année est obligatoire')]
     private int $year;
 
-    // 🖼️ Image principale (page d’accueil)
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    // 🎬 Vidéo (URL YouTube / Vimeo / MP4)
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Url(message: 'La vidéo doit être une URL valide')]
     private ?string $video = null;
 
     #[ORM\Column(type: Types::ENUM)]
-    public Category $category;
+    private Category $category;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private \DateTimeImmutable $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     // ───────────── GETTERS / SETTERS ─────────────
 
@@ -90,7 +81,7 @@ class Post
         return $this->title;
     }
 
-    public function setTitle(?string $title): self
+    public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
@@ -117,7 +108,18 @@ class Post
         $this->highlight = $highlight;
         return $this;
     }
-    
+
+    public function getYear(): int
+    {
+        return $this->year;
+    }
+
+    public function setYear(int $year): self
+    {
+        $this->year = $year;
+        return $this;
+    }
+
     public function getImage(): ?string
     {
         return $this->image;
@@ -140,18 +142,15 @@ class Post
         return $this;
     }
 
-    // 🛠 Debug helper
-    public function toArray(): array
+    public function getCategory(): Category
     {
-        return [
-            'model' => $this->model,
-            'title' => $this->title,
-            'content' => $this->content,
-            'highlight' => $this->highlight,
-            'date' => $this->date,
-            'image' => $this->image,
-            'video' => $this->video,
-        ];
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): self
+    {
+        $this->category = $category;
+        return $this;
     }
 
     public function getUser(): ?User
@@ -159,50 +158,28 @@ class Post
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(User $user): self
     {
         $this->user = $user;
-
         return $this;
     }
 
-    /**
-     * Get the value of category
-     */ 
-    public function getCategory()
+    public function getCreatedAt(): \DateTimeImmutable
     {
-        return $this->category;
+        return $this->createdAt;
     }
 
-    /**
-     * Set the value of category
-     *
-     * @return  self
-     */ 
-    public function setCategory($category)
+    // Debug helper
+    public function toArray(): array
     {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of year
-     */ 
-    public function getYear()
-    {
-        return $this->year;
-    }
-
-    /**
-     * Set the value of year
-     *
-     * @return  self
-     */ 
-    public function setYear($year)
-    {
-        $this->year = $year;
-
-        return $this;
+        return [
+            'model' => $this->model,
+            'title' => $this->title,
+            'content' => $this->content,
+            'highlight' => $this->highlight,
+            'createdAt' => $this->createdAt,
+            'image' => $this->image,
+            'video' => $this->video,
+        ];
     }
 }

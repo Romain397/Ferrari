@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Config\Category;
 use App\Form\PostType;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,13 +13,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PostController extends AbstractController
 {
+    // ───────────── HOME ─────────────
     #[Route('/', name: 'home')]
-    public function index(EntityManagerInterface $em): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
-        // Récupérer tous les articles depuis la base
-        $posts = $em->getRepository(Post::class)->findBy(
-            ["category" => "Voiture"],
-            ['highlight' => 'DESC', 'date' => 'DESC'] // mettre à la une puis plus récent
+        // Récupérer tous les posts de la catégorie VOITURE
+        $posts = $doctrine->getRepository(Post::class)->findBy(
+            ['category' => Category::Voiture],
+            ['highlight' => 'DESC', 'createdAt' => 'DESC']
         );
 
         return $this->render('post/index.html.twig', [
@@ -27,20 +28,16 @@ class PostController extends AbstractController
         ]);
     }
 
-    // --------------------------
-    // DASHBOARD
-    // --------------------------
+    // ───────────── DASHBOARD ─────────────
     #[Route('/admin', name: 'dashboard')]
     public function dashboard(): Response
     {
         return $this->render('admin/dashboard.html.twig');
     }
 
-    // --------------------------
-    // POSTS CRUD
-    // --------------------------
-    #[Route('/admin/post/create', name: 'manage_posts')]
-    public function manageCarArticles(ManagerRegistry $doctrine, Request $request): Response
+    // ───────────── POSTS CRUD ─────────────
+    #[Route('/admin/post/manage', name: 'manage_posts')]
+    public function managePosts(ManagerRegistry $doctrine, Request $request): Response
     {
         $posts = $doctrine->getRepository(Post::class)->findAll();
 
@@ -64,6 +61,7 @@ class PostController extends AbstractController
         ]);
     }
 
+    // ───────────── DELETE POST ─────────────
     #[Route('/posts/delete/{id}', name: 'delete_post')]
     public function delete(ManagerRegistry $doctrine, Post $post): Response
     {
@@ -75,5 +73,20 @@ class PostController extends AbstractController
         }
 
         return $this->redirectToRoute('manage_posts');
+    }
+
+    // ───────────── COURSES / SPORT AUTO ─────────────
+    #[Route('/sport-auto', name: 'sport_auto')]
+    public function sportAutoIndex(ManagerRegistry $doctrine): Response
+    {
+        // Récupérer uniquement les posts de la catégorie VOITURE (ancien SportAuto)
+        $races = $doctrine->getRepository(Post::class)->findBy(
+            ['category' => Category::Voiture],
+            ['createdAt' => 'DESC']
+        );
+
+        return $this->render('sport_auto/index.html.twig', [
+            'races' => $races
+        ]);
     }
 }
