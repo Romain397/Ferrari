@@ -20,49 +20,55 @@ class PostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ───── Champs Post standard ─────
-            ->add('model', TextType::class, [
-                'label' => 'Modèle',
-                'required' => false,
-                'attr' => ['placeholder' => 'Ex: Ferrari SF90'],
-            ])
             ->add('title', TextType::class, [
                 'label' => 'Titre',
-                'attr' => ['placeholder' => 'Titre de l’article / course'],
+                'attr' => ['placeholder' => 'Titre de l\'article'],
+            ])
+            ->add('category', EnumType::class, [
+                'label' => '📂 Catégorie (détermine le type)',
+                'class' => Category::class,
+                'choices' => [
+                    'Voitures emblématiques (Homepage)' => Category::Voiture,
+                    'Sport Auto / Courses' => Category::Course,
+                ],
             ])
             ->add('content', TextareaType::class, [
-                'label' => 'Description',
+                'label' => 'Description/Contenu',
                 'required' => false,
-                'attr' => ['placeholder' => 'Description (optionnelle)'],
+                'attr' => ['rows' => 4, 'placeholder' => 'Description détaillée de l\'article'],
             ])
-            ->add('highlight', CheckboxType::class, [
-                'label' => 'Mettre en avant ⭐',
+
+            // ───── CHAMPS POUR VOITURES (HOME) ─────
+            ->add('model', TextType::class, [
+                'label' => 'Modèle de voiture',
                 'required' => false,
+                'attr' => ['placeholder' => 'Ex: Ferrari SF90 Stradale'],
             ])
             ->add('year', IntegerType::class, [
                 'label' => 'Année',
+                'required' => false,
                 'attr' => ['placeholder' => 'Ex: 2025', 'min' => 1930, 'max' => date("Y")],
             ])
             ->add('image', UrlType::class, [
-                'label' => 'Image (URL ou chemin)',
+                'label' => 'Image de la voiture (URL)',
                 'required' => false,
-                'attr' => ['placeholder' => '/images/499p.jpg'],
+                'attr' => ['placeholder' => 'https://example.com/voiture.jpg'],
             ])
             ->add('video', UrlType::class, [
-                'label' => 'Vidéo (URL)',
+                'label' => 'Vidéo (YouTube/URL)',
                 'required' => false,
                 'attr' => ['placeholder' => 'https://youtu.be/...'],
             ])
-            ->add('category', EnumType::class, [
-                'label' => 'Catégorie',
-                'class' => Category::class,
+            ->add('highlight', CheckboxType::class, [
+                'label' => '⭐ Mettre en avant à la une',
+                'required' => false,
             ])
 
-            // ───── Champs spécifiques courses / SportAuto ─────
+            // ───── CHAMPS POUR SPORT AUTO (COURSES) ─────
             ->add('circuitImage', UrlType::class, [
-                'label' => 'Image du circuit',
+                'label' => 'Image du circuit (URL)',
                 'required' => false,
-                'attr' => ['placeholder' => '/images/monaco.jpg'],
+                'attr' => ['placeholder' => 'https://example.com/circuit.jpg'],
             ])
             ->add('raceDate', DateTimeType::class, [
                 'label' => 'Date de la course',

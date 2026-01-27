@@ -4,16 +4,39 @@
 {% endblock %}
 
 {% block main %}
-	<h1 class="text-danger mb-4">Dashboard Admin</h1>
+	<div class="container mt-5">
+		<h1 class="text-danger mb-5 text-center">🔴 Dashboard Admin</h1>
 
-	<div class="row">
-		<div class="col-md-4 mb-3">
-			<a href="#" class="btn btn-danger w-100">Gérer les posts</a>
+		<div class="row g-4">
+			<div class="col-md-4">
+				<div class="card bg-dark border-danger h-100">
+					<div class="card-body text-center">
+						<h5 class="card-title text-danger">📰 Gérer les Posts</h5>
+						<p class="card-text">Créer, modifier et supprimer les articles de voitures</p>
+						<a href="{{ path('manage_posts') }}" class="btn btn-danger w-100">Aller au CRUD Posts</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card bg-dark border-danger h-100">
+					<div class="card-body text-center">
+						<h5 class="card-title text-danger">🛒 Gérer le Store</h5>
+						<p class="card-text">Créer, modifier et supprimer les produits</p>
+						<a href="{{ path('manage_store') }}" class="btn btn-danger w-100">Aller à la gestion Store</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card bg-dark border-danger h-100">
+					<div class="card-body text-center">
+						<h5 class="card-title text-danger">👥 Gestion des utilisateurs</h5>
+						<p class="card-text">Gérer les rôles et supprimer les utilisateurs</p>
+						<a href="{{ path('manage_users') }}" class="btn btn-danger w-100">Gérer les utilisateurs</a>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="col-md-4 mb-3">
-			<a href="#" class="btn btn-danger w-100">Gérer Store</a>
-		</div>
-		<div class="col-md-4 mb-3">
-			<a href="#" class="btn btn-danger w-100">Gérer les utilisateurs<a/>
 	</div>
 {% endblock %}

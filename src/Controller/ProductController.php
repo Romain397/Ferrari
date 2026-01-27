@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ProductController extends AbstractController
 {
-    // ───────────── Liste des produits ─────────────
+    // ───────────── Liste des produits (publique) ─────────────
     #[Route('/store', name: 'store')]
     public function index(ManagerRegistry $doctrine): Response
     {
@@ -20,6 +20,32 @@ class ProductController extends AbstractController
 
         return $this->render('store/index.html.twig', [
             'products' => $products
+        ]);
+    }
+
+    // ───────────── Gérer les produits (admin) ─────────────
+    #[Route('/admin/store/manage', name: 'manage_store')]
+    public function manage(ManagerRegistry $doctrine, Request $request): Response
+    {
+        $products = $doctrine->getRepository(Product::class)->findAll();
+
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product->setUser($this->getUser());
+            $em = $doctrine->getManager();
+            $em->persist($product);
+            $em->flush();
+
+            $this->addFlash('success', 'Produit ajouté avec succès !');
+            return $this->redirectToRoute('manage_store');
+        }
+
+        return $this->render('admin/manage_store.html.twig', [
+            'products' => $products,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -38,7 +64,7 @@ class ProductController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Produit ajouté avec succès !');
-            return $this->redirectToRoute('store_index');
+            return $this->redirectToRoute('store');
         }
 
         return $this->render('store/create.html.twig', [
@@ -55,7 +81,7 @@ class ProductController extends AbstractController
         $em->flush();
 
         $this->addFlash('success', 'Produit supprimé avec succès !');
-        return $this->redirectToRoute('store_index');
+        return $this->redirectToRoute('manage_store');
     }
 
     // ───────────── Modifier un produit ─────────────
@@ -70,12 +96,13 @@ class ProductController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Produit modifié avec succès !');
-            return $this->redirectToRoute('store_index');
+            return $this->redirectToRoute('manage_store');
         }
 
-        return $this->render('store/edit.html.twig', [
+        return $this->render('admin/manage_store_edit.html.twig', [
             'form' => $form->createView(),
             'product' => $product
         ]);
     }
 }
+

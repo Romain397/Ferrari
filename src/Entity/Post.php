@@ -6,6 +6,7 @@ use App\Config\Category;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity]
 class Post
@@ -32,9 +33,8 @@ class Post
     #[ORM\Column]
     private bool $highlight = false;
 
-    #[ORM\Column]
-    #[Assert\NotBlank(message: 'L’année est obligatoire')]
-    private int $year;
+    #[ORM\Column(nullable: true)]
+    private ?int $year = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
@@ -42,6 +42,12 @@ class Post
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Url(message: 'La vidéo doit être une URL valide')]
     private ?string $video = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $circuitImage = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTime $raceDate = null;
 
     #[ORM\Column(type: Types::ENUM)]
     private Category $category;
@@ -109,12 +115,12 @@ class Post
         return $this;
     }
 
-    public function getYear(): int
+    public function getYear(): ?int
     {
         return $this->year;
     }
 
-    public function setYear(int $year): self
+    public function setYear(?int $year): self
     {
         $this->year = $year;
         return $this;
@@ -139,6 +145,28 @@ class Post
     public function setVideo(?string $video): self
     {
         $this->video = $video;
+        return $this;
+    }
+
+    public function getCircuitImage(): ?string
+    {
+        return $this->circuitImage;
+    }
+
+    public function setCircuitImage(?string $circuitImage): self
+    {
+        $this->circuitImage = $circuitImage;
+        return $this;
+    }
+
+    public function getRaceDate(): ?\DateTime
+    {
+        return $this->raceDate;
+    }
+
+    public function setRaceDate(?\DateTime $raceDate): self
+    {
+        $this->raceDate = $raceDate;
         return $this;
     }
 
@@ -181,5 +209,60 @@ class Post
             'image' => $this->image,
             'video' => $this->video,
         ];
+    }
+
+    // ───────────── VALIDATION PERSONNALISÉE ─────────────
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context): void
+    {
+        // Si c'est une VOITURE (Home)
+        if ($this->category === Category::Voiture) {
+            // Ne pas permettre les champs de course
+            if (!empty($this->circuitImage)) {
+                $context->buildViolation('Pour une voiture, l\'image du circuit ne doit pas être remplie.')
+                    ->atPath('circuitImage')
+                    ->addViolation();
+            }
+            if (!empty($this->raceDate)) {
+                $context->buildViolation('Pour une voiture, la date de course ne doit pas être remplie.')
+                    ->atPath('raceDate')
+                    ->addViolation();
+            }
+            // Image de voiture obligatoire
+            if (empty($this->image)) {
+                $context->buildViolation('Pour une voiture, l\'image est obligatoire.')
+                    ->atPath('image')
+                    ->addViolation();
+            }
+        }
+        // Si c'est une COURSE (Sport Auto)
+        elseif ($this->category === Category::Course) {
+            // Ne pas permettre les champs de voiture
+            if (!empty($this->model)) {
+                $context->buildViolation('Pour une course, le modèle de voiture ne doit pas être rempli.')
+                    ->atPath('model')
+                    ->addViolation();
+            }
+            if (!empty($this->year)) {
+                $context->buildViolation('Pour une course, l\'année ne doit pas être remplie.')
+                    ->atPath('year')
+                    ->addViolation();
+            }
+            if (!empty($this->image)) {
+                $context->buildViolation('Pour une course, l\'image de voiture ne doit pas être remplie.')
+                    ->atPath('image')
+                    ->addViolation();
+            }
+            if (!empty($this->video)) {
+                $context->buildViolation('Pour une course, la vidéo ne doit pas être remplie.')
+                    ->atPath('video')
+                    ->addViolation();
+            }
+            if (!empty($this->highlight)) {
+                $context->buildViolation('Pour une course, l\'option "À la une" ne doit pas être cochée.')
+                    ->atPath('highlight')
+                    ->addViolation();
+            }
+        }
     }
 }

@@ -75,6 +75,27 @@ class PostController extends AbstractController
         return $this->redirectToRoute('manage_posts');
     }
 
+    // ───────────── EDIT POST ─────────────
+    #[Route('/posts/edit/{id}', name: 'edit_post')]
+    public function edit(ManagerRegistry $doctrine, Request $request, Post $post): Response
+    {
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $doctrine->getManager();
+            $em->flush();
+            $this->addFlash('success', 'Article modifié avec succès !');
+            return $this->redirectToRoute('manage_posts');
+        }
+
+        return $this->render('post/manage_posts.html.twig', [
+            'posts' => $doctrine->getRepository(Post::class)->findAll(),
+            'form' => $form->createView(),
+            'editingPost' => $post,
+        ]);
+    }
+
     // ───────────── COURSES / SPORT AUTO ─────────────
     #[Route('/sport-auto', name: 'sport_auto')]
     public function sportAutoIndex(ManagerRegistry $doctrine): Response
