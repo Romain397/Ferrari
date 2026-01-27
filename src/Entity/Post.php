@@ -237,32 +237,8 @@ class Post
         }
         // Si c'est une COURSE (Sport Auto)
         elseif ($this->category === Category::Course) {
-            // Ne pas permettre les champs de voiture
-            if (!empty($this->model)) {
-                $context->buildViolation('Pour une course, le modèle de voiture ne doit pas être rempli.')
-                    ->atPath('model')
-                    ->addViolation();
-            }
-            if (!empty($this->year)) {
-                $context->buildViolation('Pour une course, l\'année ne doit pas être remplie.')
-                    ->atPath('year')
-                    ->addViolation();
-            }
-            if (!empty($this->image)) {
-                $context->buildViolation('Pour une course, l\'image de voiture ne doit pas être remplie.')
-                    ->atPath('image')
-                    ->addViolation();
-            }
-            if (!empty($this->video)) {
-                $context->buildViolation('Pour une course, la vidéo ne doit pas être remplie.')
-                    ->atPath('video')
-                    ->addViolation();
-            }
-            if (!empty($this->highlight)) {
-                $context->buildViolation('Pour une course, l\'option "À la une" ne doit pas être cochée.')
-                    ->atPath('highlight')
-                    ->addViolation();
-            }
+            // Pour une course, on accepte tous les champs
+            // Les champs voiture seront simplement ignorés (masqués en CSS/JS au formulaire)
         }
     }
 }

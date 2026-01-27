@@ -10,9 +10,9 @@
 			<div class="col-md-4 mb-4">
 				<div class="card h-100 shadow-sm">
 					{% if race.circuitImage %}
-						<img src="{{ race.circuitImage }}" class="card-img-top" alt="{{ race.title }}" style="height: 220px; object-fit: cover;">
+						<img src="{% if race.circuitImage starts with 'http' %}{{ race.circuitImage }}{% else %}{{ asset(race.circuitImage) }}{% endif %}" class="card-img-top" alt="{{ race.title }}">
 					{% else %}
-						<div class="card-img-top bg-secondary" style="height: 220px; display: flex; align-items: center; justify-content: center;">
+						<div class="card-img-placeholder">
 							<span class="text-white">Pas d'image</span>
 						</div>
 					{% endif %}
@@ -26,7 +26,7 @@
 						{% if race.content %}
 							<p class="card-text flex-grow-1">{{ race.content }}</p>
 						{% endif %}
-						<a href="#" class="btn btn-danger w-100 mt-2">Voir détails</a>
+
 					</div>
 				</div>
 			</div>

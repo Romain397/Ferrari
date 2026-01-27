@@ -40,7 +40,7 @@
 								{% endif %}
 							</td>
 							<td>
-								<form method="POST" action="{{ path('user_role', {'id': user.id}) }}" style="display: inline;">
+								<form method="POST" action="{{ path('user_role', {'id': user.id}) }}" class="d-inline">
 									{% if 'ROLE_ADMIN' in user.roles %}
 										<button type="submit" name="role" value="ROLE_USER" class="btn btn-sm btn-warning" title="Rétrograder en utilisateur">👤 Rétrograder</button>
 									{% else %}

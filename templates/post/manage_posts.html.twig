@@ -19,11 +19,17 @@
 			{% endif %}
 		</h3>
 
-		<style>
-			.card label {
-				color: #fff;
-			}
-		</style>
+		{% if form.vars.errors|length > 0 %}
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>⚠️ Erreurs de validation:</strong>
+				<ul class="mb-0 mt-2">
+					{% for error in form.vars.errors %}
+						<li>{{ error.message }}</li>
+					{% endfor %}
+				</ul>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endif %}
 
 		{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
