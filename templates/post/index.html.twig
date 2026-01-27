@@ -9,7 +9,7 @@
 
 	<p class="text-center mb-5">
 		Ferrari est une marque emblématique du sport automobile, fondée par Enzo Ferrari.
-				    Présente en endurance et en Formule 1, la Scuderia incarne la performance et la passion.
+								    Présente en endurance et en Formule 1, la Scuderia incarne la performance et la passion.
 	</p>
 
 	<h2 class="mb-4">Voitures emblématiques</h2>
@@ -36,9 +36,14 @@
 							{{ post.year }}</p>
 
 						{% if post.video %}
+							{% set youtubeEmbed = post.video|replace({'https://youtu.be/': 'https://www.youtube.com/embed/'}) %}
 							<div class="ratio ratio-16x9 mt-2">
-								<iframe src="{{ post.video }}" title="Vidéo {{ post.model }}" allowfullscreen></iframe>
+								<iframe src="{{ youtubeEmbed }}" title="Vidéo {{ post.model }}" allowfullscreen></iframe>
 							</div>
+						{% endif %}
+
+						{% if post.circuitImage %}
+							<img src="{{ post.circuitImage }}" alt="Circuit {{ post.title }}" class="img-fluid rounded-3 mt-3">
 						{% endif %}
 					</div>
 

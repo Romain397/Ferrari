@@ -102,7 +102,7 @@ class PostController extends AbstractController
     {
         // Récupérer uniquement les posts de la catégorie VOITURE (ancien SportAuto)
         $races = $doctrine->getRepository(Post::class)->findBy(
-            ['category' => Category::Voiture],
+            ['category' => Category::Course],
             ['createdAt' => 'DESC']
         );
 
