@@ -54,7 +54,7 @@ class Post
     private Category $category;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
@@ -176,7 +176,7 @@ class Post
     {
         return $this->user;
     }
-    public function setUser(User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
         return $this;
