@@ -13,7 +13,7 @@
 						<img src="{{ asset(product.image) }}" class="card-img-top" alt="{{ product.name }}">
 					{% endif %}
 					<div class="card-body">
-						<h5 class="card-title">{{ product.name }}</h5>
+						<h5 class="card-title store-product-title">{{ product.name }}</h5>
 						<p class="card-text">{{ product.description|slice(0,50) ~ '...' }}</p>
 						<p class="text-danger">{{ product.price }}
 							€</p>

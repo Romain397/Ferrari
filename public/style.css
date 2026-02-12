@@ -206,6 +206,16 @@ main {
     flex-grow: 1;
 }
 
+/* Ciblage local des couleurs pour les cartes Sport Auto / Store */
+.sport-date {
+    color: var(--ferrari-gold) !important;
+    font-weight: 600;
+}
+
+.store-product-title {
+    color: var(--ferrari-red) !important;
+}
+
 .card.highlight {
     border: 2px solid var(--ferrari-gold);
     box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4);
