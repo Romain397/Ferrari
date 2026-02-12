@@ -8,9 +8,9 @@
 	<div class="row">
 		{% for product in products %}
 			<div class="col-md-3 mb-4">
-				<div class="card h-100 shadow-sm">
+				<div class="card store-card h-100 shadow-sm">
 					{% if product.image %}
-						<img src="{{ asset(product.image) }}" class="card-img-top" alt="{{ product.name }}">
+						<img src="{{ asset(product.image) }}" class="card-img-top store-product-image" alt="{{ product.name }}">
 					{% endif %}
 					<div class="card-body">
 						<h5 class="card-title store-product-title">{{ product.name }}</h5>

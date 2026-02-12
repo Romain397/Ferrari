@@ -216,6 +216,19 @@ main {
     color: var(--ferrari-red) !important;
 }
 
+.store-card .store-product-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
+}
+
+@media (max-width: 768px) {
+    .store-card .store-product-image {
+        height: 220px;
+    }
+}
+
 .card.highlight {
     border: 2px solid var(--ferrari-gold);
     box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4);
