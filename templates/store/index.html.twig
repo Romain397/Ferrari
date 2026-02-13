@@ -7,7 +7,7 @@
 	<h1 class="text-danger mb-4">Store</h1>
 	<div class="row">
 		{% for product in products %}
-			<div class="col-md-3 mb-4">
+			<div class="col-md-3 mb-4 mx-4">
 				<div class="card store-card h-100 shadow-sm">
 					{% if product.image %}
 						<img src="{{ asset(product.image) }}" class="card-img-top store-product-image" alt="{{ product.name }}">
