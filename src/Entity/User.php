@@ -40,10 +40,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'user')]
     private Collection $products;
 
+    /** @var Collection<int, Commande> */
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $commandes;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->products = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
     // ===== Getters / Setters =====
@@ -154,6 +159,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $product->setUser(null);
             }
         }
+        return $this;
+    }
+
+    // ===== Commandes =====
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): static
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): static
+    {
+        if ($this->commandes->removeElement($commande)) {
+            if ($commande->getUser() === $this) {
+                $commande->setUser(null);
+            }
+        }
+
         return $this;
     }
 }

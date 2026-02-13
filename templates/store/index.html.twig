@@ -17,7 +17,16 @@
 						<p class="card-text">{{ product.description|slice(0,50) ~ '...' }}</p>
 						<p class="text-danger">{{ product.price }}
 							€</p>
-						<a href="#" class="btn btn-danger w-100">Ajouter au panier</a>
+						<button
+							type="button"
+							class="btn btn-danger w-100 js-add-to-cart"
+							data-product-id="{{ product.id }}"
+							data-product-name="{{ product.name }}"
+							data-product-price="{{ product.price }}"
+							data-product-image="{{ product.image ? asset(product.image) : '' }}"
+						>
+							Ajouter au panier
+						</button>
 					</div>
 				</div>
 			</div>

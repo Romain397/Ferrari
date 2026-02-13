@@ -671,6 +671,16 @@ footer a:hover {
     color: #ccc;
 }
 
+/* ────────────────────────────────────────── */
+/* PANIER                                    */
+/* ────────────────────────────────────────── */
+.checkout-form-inline {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
 /* ----------------------------------------- */
 /* FOOTER                                     */
 /* ----------------------------------------- */
