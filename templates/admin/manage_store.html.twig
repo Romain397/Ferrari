@@ -4,52 +4,41 @@
 {% endblock %}
 
 {% block main %}
-	<div class="mb-4">
+	<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
 		<a href="{{ path('dashboard') }}" class="btn btn-secondary">← Retour au Dashboard</a>
+		<h1 class="mb-0 text-danger">🛒 Gérer le Store</h1>
 	</div>
-	<h1 class="mb-4 text-center text-danger">🛒 Gérer le Store</h1>
 
-	<!-- FORMULAIRE DE CRÉATION -->
-	<div class="card bg-dark border-danger mb-5 p-4">
+	<div class="card bg-dark border border-danger mb-5 p-4 no-lift">
 		<h3 class="mb-3 text-danger">➕ Ajouter un nouveau produit</h3>
 
 		{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-
-			<div class="row mb-3">
+			<div class="row g-3">
 				<div class="col-md-6">
 					{{ form_row(form.name, {'attr': {'class': 'form-control'}}) }}
 				</div>
 				<div class="col-md-6">
 					{{ form_row(form.type, {'attr': {'class': 'form-select'}}) }}
 				</div>
-			</div>
-
-			<div class="row mb-3">
 				<div class="col-md-6">
 					{{ form_row(form.price, {'attr': {'class': 'form-control', 'step': '0.01', 'min': '0'}}) }}
 				</div>
 				<div class="col-md-6">
 					{{ form_row(form.image, {'attr': {'class': 'form-control'}}) }}
 				</div>
-			</div>
-
-			<div class="row mb-3">
-				<div class="col-md-12">
+				<div class="col-12">
 					{{ form_row(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
 				</div>
 			</div>
-
-			<button type="submit" class="btn btn-danger">Ajouter le produit</button>
-
+			<button type="submit" class="btn btn-danger mt-3">Ajouter le produit</button>
 		{{ form_end(form) }}
 	</div>
 
-	<!-- LISTE DES PRODUITS -->
 	<h3 class="mb-3 text-danger">📦 Produits existants</h3>
 
 	{% if products is not empty %}
 		<div class="table-responsive">
-			<table class="table table-striped table-hover">
+			<table class="table table-striped table-hover align-middle">
 				<thead class="table-dark">
 					<tr>
 						<th>ID</th>
@@ -66,7 +55,7 @@
 							<td><strong>{{ product.id }}</strong></td>
 							<td>{{ product.name }}</td>
 							<td>
-								<span class="badge bg-info">
+								<span class="badge text-bg-info">
 									{% if product.type.value == 'merch' %}
 										Merchandising
 									{% elseif product.type.value == 'accessoire' %}
@@ -81,16 +70,12 @@
 							<td><strong class="text-danger">{{ product.price|number_format(2, ',', ' ') }}€</strong></td>
 							<td>
 								{% if product.description %}
-									{% if product.description|length > 50 %}
-										{{ product.description|slice(0, 50) }}...
-									{% else %}
-										{{ product.description }}
-									{% endif %}
+									{{ product.description|length > 50 ? product.description|slice(0, 50) ~ '...' : product.description }}
 								{% else %}
-									<em class="text-muted">Pas de description</em>
+									<em class="text-light-emphasis">Pas de description</em>
 								{% endif %}
 							</td>
-							<td>
+							<td class="d-flex gap-2 flex-wrap">
 								<a href="{{ path('store_edit', {'id': product.id}) }}" class="btn btn-sm btn-warning">✏️ Modifier</a>
 								<a href="{{ path('store_delete', {'id': product.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">🗑️ Supprimer</a>
 							</td>
@@ -100,8 +85,6 @@
 			</table>
 		</div>
 	{% else %}
-		<div class="alert alert-info" role="alert">
-			Aucun produit pour le moment. Créez le premier ci-dessus !
-		</div>
+		<div class="alert alert-info" role="alert">Aucun produit pour le moment. Créez le premier ci-dessus.</div>
 	{% endif %}
 {% endblock %}

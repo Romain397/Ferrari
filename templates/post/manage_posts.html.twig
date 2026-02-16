@@ -4,13 +4,12 @@
 {% endblock %}
 
 {% block main %}
-	<div class="mb-4">
+	<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
 		<a href="{{ path('dashboard') }}" class="btn btn-secondary">← Retour au Dashboard</a>
+		<h1 class="mb-0 text-danger">📰 Gérer les articles</h1>
 	</div>
-	<h1 class="mb-4 text-center text-danger">📰 Gérer les articles de voitures</h1>
 
-	<!-- FORMULAIRE DE CRÉATION/MODIFICATION -->
-	<div class="card bg-dark border-danger mb-5 p-4">
+	<div class="card bg-dark border border-danger mb-5 p-4 no-lift">
 		<h3 class="mb-3 text-danger">
 			{% if editingPost is defined %}
 				✏️ Modifier l'article: <strong>{{ editingPost.title }}</strong>
@@ -32,64 +31,30 @@
 		{% endif %}
 
 		{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-
-			<div class="row mb-3">
-				<div class="col-md-6">
-					{{ form_row(form.title, {'attr': {'class': 'form-control'}}) }}
-				</div>
-				<div class="col-md-6">
-					{{ form_row(form.category, {'attr': {'class': 'form-select'}}) }}
-				</div>
+			<div class="row g-3">
+				<div class="col-md-6">{{ form_row(form.title, {'attr': {'class': 'form-control'}}) }}</div>
+				<div class="col-md-6">{{ form_row(form.category, {'attr': {'class': 'form-select'}}) }}</div>
+				<div class="col-12">{{ form_row(form.content, {'attr': {'class': 'form-control', 'rows': 4}}) }}</div>
 			</div>
 
-			<div class="row mb-3">
-				<div class="col-md-12">
-					{{ form_row(form.content, {'attr': {'class': 'form-control', 'rows': 4}}) }}
-				</div>
-			</div>
-
-			<!-- CHAMPS POUR VOITURES -->
 			<div id="voiture-fields" class="voiture-section">
 				<hr class="border-danger my-4">
 				<h4 class="text-danger mb-3">🏎️ Champs pour Voitures</h4>
-				
-				<div class="row mb-3">
-					<div class="col-md-6">
-						{{ form_row(form.model, {'attr': {'class': 'form-control'}}) }}
-					</div>
-					<div class="col-md-6">
-						{{ form_row(form.year, {'attr': {'class': 'form-control'}}) }}
-					</div>
-				</div>
-
-				<div class="row mb-3">
-					<div class="col-md-6">
-						{{ form_row(form.image, {'attr': {'class': 'form-control'}}) }}
-					</div>
-					<div class="col-md-6">
-						{{ form_row(form.video, {'attr': {'class': 'form-control'}}) }}
-					</div>
-				</div>
-
-				<div class="row mb-3">
-					<div class="col-md-12">
-						{{ form_row(form.highlight) }}
-					</div>
+				<div class="row g-3">
+					<div class="col-md-6">{{ form_row(form.model, {'attr': {'class': 'form-control'}}) }}</div>
+					<div class="col-md-6">{{ form_row(form.year, {'attr': {'class': 'form-control'}}) }}</div>
+					<div class="col-md-6">{{ form_row(form.image, {'attr': {'class': 'form-control'}}) }}</div>
+					<div class="col-md-6">{{ form_row(form.video, {'attr': {'class': 'form-control'}}) }}</div>
+					<div class="col-12">{{ form_row(form.highlight) }}</div>
 				</div>
 			</div>
 
-			<!-- CHAMPS POUR COURSES -->
 			<div id="course-fields" class="course-section">
 				<hr class="border-danger my-4">
 				<h4 class="text-danger mb-3">🏁 Champs pour Courses</h4>
-				
-				<div class="row mb-3">
-					<div class="col-md-6">
-						{{ form_row(form.circuitImage, {'attr': {'class': 'form-control'}}) }}
-					</div>
-					<div class="col-md-6">
-						{{ form_row(form.raceDate, {'attr': {'class': 'form-control'}}) }}
-					</div>
+				<div class="row g-3">
+					<div class="col-md-6">{{ form_row(form.circuitImage, {'attr': {'class': 'form-control'}}) }}</div>
+					<div class="col-md-6">{{ form_row(form.raceDate, {'attr': {'class': 'form-control'}}) }}</div>
 				</div>
 			</div>
 
@@ -101,7 +66,6 @@
 					<button type="submit" class="btn btn-danger">Publier</button>
 				{% endif %}
 			</div>
-
 		{{ form_end(form) }}
 	</div>
 
@@ -110,6 +74,10 @@
 			const categorySelect = document.querySelector('[name="post[category]"]');
 			const voitureFields = document.getElementById('voiture-fields');
 			const courseFields = document.getElementById('course-fields');
+
+			if (!categorySelect || !voitureFields || !courseFields) {
+				return;
+			}
 
 			function updateDisplay() {
 				const selectedValue = categorySelect.value;
@@ -128,14 +96,11 @@
 
 		document.addEventListener('DOMContentLoaded', toggleCategoryFields);
 	</script>
-	</div>
 
-	<!-- LISTE DES POSTS -->
 	<h3 class="mb-3 text-danger">📚 Articles existants</h3>
-
 	{% if posts is not empty %}
 		<div class="table-responsive">
-			<table class="table table-striped table-hover">
+			<table class="table table-striped table-hover align-middle">
 				<thead class="table-dark">
 					<tr>
 						<th>ID</th>
@@ -154,11 +119,7 @@
 							<td>{{ post.title }}</td>
 							<td>{{ post.model }}</td>
 							<td>{{ post.year }}</td>
-							<td>
-								<span class="badge {% if post.category.value == 'Voiture' %}bg-danger{% else %}bg-warning{% endif %}">
-									{{ post.category.value }}
-								</span>
-							</td>
+							<td><span class="badge {{ post.category.value == 'Voiture' ? 'bg-danger' : 'bg-warning text-dark' }}">{{ post.category.value }}</span></td>
 							<td>
 								{% if post.highlight %}
 									<span class="badge bg-success">⭐ OUI</span>
@@ -166,7 +127,7 @@
 									<span class="badge bg-secondary">Non</span>
 								{% endif %}
 							</td>
-							<td>
+							<td class="d-flex gap-2 flex-wrap">
 								<a href="{{ path('edit_post', {'id': post.id}) }}" class="btn btn-sm btn-warning">✏️ Modifier</a>
 								<a href="{{ path('delete_post', {'id': post.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">🗑️ Supprimer</a>
 							</td>
@@ -176,8 +137,6 @@
 			</table>
 		</div>
 	{% else %}
-		<div class="alert alert-info" role="alert">
-			Aucun article pour le moment. Créez le premier ci-dessus !
-		</div>
+		<div class="alert alert-info" role="alert">Aucun article pour le moment. Créez le premier ci-dessus.</div>
 	{% endif %}
 {% endblock %}

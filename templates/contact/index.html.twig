@@ -4,7 +4,16 @@
 {% endblock %}
 
 {% block main %}
-	<h1>Contact</h1>
-
-	<p>Contactez-nous pour toute information sur Ferrari et le WEC.</p>
+	<div class="row justify-content-center">
+		<div class="col-lg-8">
+			<div class="card bg-dark border border-danger p-4 no-lift">
+				<h1 class="text-danger mb-3">Contact</h1>
+				<p class="mb-3">Contactez-nous pour toute information sur Ferrari et le WEC.</p>
+				<div class="d-flex flex-wrap gap-2">
+					<a href="{{ path('home') }}" class="btn btn-danger">Retour accueil</a>
+					<a href="{{ path('store') }}" class="btn btn-secondary">Voir le store</a>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

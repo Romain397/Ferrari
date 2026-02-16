@@ -1,14 +1,11 @@
 {% macro card(title, content, highlight = false) %}
-	<div class="card {% if highlight %}card-highlight{% endif %}">
-		<h3 class="card-title">
-			{{ title|upper }}
-			{% if highlight %}
-				⭐
-			{% endif %}
-		</h3>
-
-		<p class="card-content">
-			{{ content }}
-		</p>
+	<div class="card h-100 {% if highlight %}border border-warning{% endif %}">
+		<div class="card-body d-flex flex-column">
+			<h3 class="card-title text-danger text-uppercase">
+				{{ title }}
+				{% if highlight %}⭐{% endif %}
+			</h3>
+			<p class="card-text flex-grow-1">{{ content }}</p>
+		</div>
 	</div>
 {% endmacro %}
