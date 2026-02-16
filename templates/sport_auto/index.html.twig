@@ -11,14 +11,24 @@
 			<div class="col-md-4 mb-4">
 				<div class="card h-100 shadow-sm">
 					{% if race.circuitImage %}
-						<img src="{% if race.circuitImage starts with 'http' %}{{ race.circuitImage }}{% else %}{{ asset(race.circuitImage) }}{% endif %}" class="card-img-top" alt="{{ race.title }}">
+						<img
+							src="{{ race.circuitImage|optimized_image_url(640) }}"
+							class="card-img-top"
+							alt="{{ race.title }}"
+							width="640"
+							height="360"
+							sizes="(min-width: 1200px) 416px, (min-width: 768px) 320px, 96vw"
+							loading="{{ loop.first ? 'eager' : 'lazy' }}"
+							fetchpriority="{{ loop.first ? 'high' : 'auto' }}"
+							decoding="async"
+						>
 					{% else %}
 						<div class="card-img-placeholder">
 							<span class="text-white">Pas d'image</span>
 						</div>
 					{% endif %}
 					<div class="card-body d-flex flex-column">
-						<h5 class="card-title text-danger">{{ race.title }}</h5>
+						<h2 class="h5 card-title text-danger">{{ race.title }}</h2>
 						{% if race.raceDate %}
 							<p class="card-text text-warning fw-semibold">
 								<strong>📅 Date:</strong> {{ race.raceDate|date('d/m/Y H:i') }}

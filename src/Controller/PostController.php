@@ -135,6 +135,14 @@ class PostController extends AbstractController
 
     private function validatePostImageInputs(Post $post, FormInterface $form, mixed $imageFile, mixed $circuitImageFile): void
     {
+        if ($imageFile instanceof UploadedFile && !$this->isValidUploadedImage($imageFile)) {
+            $form->get('imageFile')->addError(new FormError('Le fichier image voiture est invalide. Formats acceptés : JPG, PNG, WEBP, GIF.'));
+        }
+
+        if ($circuitImageFile instanceof UploadedFile && !$this->isValidUploadedImage($circuitImageFile)) {
+            $form->get('circuitImageFile')->addError(new FormError('Le fichier image circuit est invalide. Formats acceptés : JPG, PNG, WEBP, GIF.'));
+        }
+
         if ($post->getCategory() === Category::Voiture) {
             $hasUrl = trim((string) $post->getImage()) !== '';
             $hasUpload = $imageFile instanceof UploadedFile;
@@ -165,6 +173,10 @@ class PostController extends AbstractController
 
     private function uploadPostImage(UploadedFile $uploadedFile, SluggerInterface $slugger): string
     {
+        if (!$this->isValidUploadedImage($uploadedFile)) {
+            throw new \RuntimeException('Invalid image upload.');
+        }
+
         $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = (string) $slugger->slug($originalFilename);
         if ($safeFilename === '') {
@@ -185,5 +197,17 @@ class PostController extends AbstractController
         $uploadedFile->move($uploadAbsolutePath, $newFilename);
 
         return self::POST_UPLOAD_DIR . '/' . $newFilename;
+    }
+
+    private function isValidUploadedImage(UploadedFile $uploadedFile): bool
+    {
+        $imageInfo = @getimagesize($uploadedFile->getPathname());
+        if ($imageInfo === false) {
+            return false;
+        }
+
+        $mime = (string) ($imageInfo['mime'] ?? '');
+
+        return in_array($mime, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], true);
     }
 }

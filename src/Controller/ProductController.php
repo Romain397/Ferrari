@@ -181,6 +181,10 @@ class ProductController extends AbstractController
 
     private function uploadProductImage(UploadedFile $uploadedFile, SluggerInterface $slugger): string
     {
+        if (!$this->isValidUploadedImage($uploadedFile)) {
+            throw new \RuntimeException('Invalid image upload.');
+        }
+
         $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = (string) $slugger->slug($originalFilename);
         if ($safeFilename === '') {
@@ -206,6 +210,10 @@ class ProductController extends AbstractController
     private function resolveProductImageInput(mixed $uploadedFile, string $imageUrl, SluggerInterface $slugger): ?string
     {
         if ($uploadedFile instanceof UploadedFile) {
+            if (!$this->isValidUploadedImage($uploadedFile)) {
+                return null;
+            }
+
             return $this->uploadProductImage($uploadedFile, $slugger);
         }
 
@@ -224,6 +232,18 @@ class ProductController extends AbstractController
         }
 
         return $candidate;
+    }
+
+    private function isValidUploadedImage(UploadedFile $uploadedFile): bool
+    {
+        $imageInfo = @getimagesize($uploadedFile->getPathname());
+        if ($imageInfo === false) {
+            return false;
+        }
+
+        $mime = (string) ($imageInfo['mime'] ?? '');
+
+        return in_array($mime, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], true);
     }
 }
 
