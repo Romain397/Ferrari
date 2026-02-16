@@ -182,12 +182,16 @@ class ProductController extends AbstractController
     private function uploadProductImage(UploadedFile $uploadedFile, SluggerInterface $slugger): string
     {
         $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $slugger->slug($originalFilename);
+        $safeFilename = (string) $slugger->slug($originalFilename);
+        if ($safeFilename === '') {
+            $safeFilename = 'product-image';
+        }
+        $safeFilename = substr($safeFilename, 0, 40);
         $extension = strtolower((string) pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION));
         if ($extension === '') {
             $extension = 'bin';
         }
-        $newFilename = sprintf('%s-%s.%s', $safeFilename, uniqid('', true), $extension);
+        $newFilename = sprintf('%s-%s.%s', $safeFilename, str_replace('.', '', uniqid('', true)), $extension);
 
         $uploadAbsolutePath = $this->getParameter('kernel.project_dir') . '/public/' . self::PRODUCT_UPLOAD_DIR;
         if (!is_dir($uploadAbsolutePath)) {

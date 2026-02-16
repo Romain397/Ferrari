@@ -166,12 +166,16 @@ class PostController extends AbstractController
     private function uploadPostImage(UploadedFile $uploadedFile, SluggerInterface $slugger): string
     {
         $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $slugger->slug($originalFilename);
+        $safeFilename = (string) $slugger->slug($originalFilename);
+        if ($safeFilename === '') {
+            $safeFilename = 'post-image';
+        }
+        $safeFilename = substr($safeFilename, 0, 40);
         $extension = strtolower((string) pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION));
         if ($extension === '') {
             $extension = 'bin';
         }
-        $newFilename = sprintf('%s-%s.%s', $safeFilename, uniqid('', true), $extension);
+        $newFilename = sprintf('%s-%s.%s', $safeFilename, str_replace('.', '', uniqid('', true)), $extension);
 
         $uploadAbsolutePath = $this->getParameter('kernel.project_dir') . '/public/' . self::POST_UPLOAD_DIR;
         if (!is_dir($uploadAbsolutePath)) {
