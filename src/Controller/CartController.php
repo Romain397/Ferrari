@@ -22,7 +22,7 @@ class CartController extends AbstractController
     }
 
     #[Route('/commandes', name: 'orders_index', methods: ['GET'])]
-    public function orders(CommandeRepository $commandeRepository): Response
+    public function orders(CommandeRepository $commandeRepository, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
@@ -36,9 +36,98 @@ class CartController extends AbstractController
             ['createdAt' => 'DESC', 'id' => 'DESC']
         );
 
+        $updated = false;
+        $now = new \DateTimeImmutable('now', new \DateTimeZone($_ENV['APP_TIMEZONE'] ?? 'Europe/Paris'));
+
+        foreach ($commandes as $commande) {
+            $currentStatus = (string) $commande->getStatus();
+
+            // Statuses managed manually by user must remain unchanged.
+            if ($currentStatus === 'Commande annulée' || $currentStatus === 'Livrée') {
+                continue;
+            }
+
+            $createdAt = $commande->getCreatedAt();
+            if (!$createdAt instanceof \DateTimeImmutable) {
+                continue;
+            }
+
+            $elapsedSeconds = $now->getTimestamp() - $createdAt->getTimestamp();
+            $nextStatus = 'En attente';
+
+            if ($elapsedSeconds >= 25 * 60) {
+                $nextStatus = 'Livrée';
+            } elseif ($elapsedSeconds >= 10 * 60) {
+                $nextStatus = 'En livraison';
+            }
+
+            if ($nextStatus !== $currentStatus) {
+                $commande->setStatus($nextStatus);
+                $updated = true;
+            }
+        }
+
+        if ($updated) {
+            $entityManager->flush();
+        }
+
         return $this->render('orders/index.html.twig', [
             'commandes' => $commandes,
         ]);
+    }
+
+    #[Route('/commandes/{id}/annuler', name: 'orders_cancel', methods: ['POST'])]
+    public function cancelOrder(Commande $commande, Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User || $commande->getUser()?->getId() !== $user->getId()) {
+            $this->addFlash('danger', 'Commande introuvable.');
+            return $this->redirectToRoute('orders_index');
+        }
+
+        if (!$this->isCsrfTokenValid('cancel_order_' . $commande->getId(), (string) $request->request->get('_token'))) {
+            $this->addFlash('danger', 'Requête invalide.');
+            return $this->redirectToRoute('orders_index');
+        }
+
+        $status = (string) $commande->getStatus();
+        if ($status === 'Livrée' || $status === 'Commande annulée') {
+            $this->addFlash('warning', 'Cette commande ne peut plus être annulée.');
+            return $this->redirectToRoute('orders_index');
+        }
+
+        $commande->setStatus('Commande annulée');
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Commande annulée.');
+        return $this->redirectToRoute('orders_index');
+    }
+
+    #[Route('/commandes/{id}/clear', name: 'orders_clear', methods: ['POST'])]
+    public function clearOrder(Commande $commande, Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User || $commande->getUser()?->getId() !== $user->getId()) {
+            $this->addFlash('danger', 'Commande introuvable.');
+            return $this->redirectToRoute('orders_index');
+        }
+
+        if (!$this->isCsrfTokenValid('clear_order_' . $commande->getId(), (string) $request->request->get('_token'))) {
+            $this->addFlash('danger', 'Requête invalide.');
+            return $this->redirectToRoute('orders_index');
+        }
+
+        $status = (string) $commande->getStatus();
+        if ($status !== 'Livrée' && $status !== 'Commande annulée') {
+            $this->addFlash('warning', 'Vous pourrez supprimer cette commande une fois livrée ou annulée.');
+            return $this->redirectToRoute('orders_index');
+        }
+
+        $entityManager->remove($commande);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Commande supprimée de votre page.');
+        return $this->redirectToRoute('orders_index');
     }
 
     #[Route('/panier/commander', name: 'cart_checkout', methods: ['POST'])]

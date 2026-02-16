@@ -152,6 +152,7 @@
         if (panel.dataset.ordered === "1") {
             activeStore.removeItem(storageKey);
             cart = [];
+            panel.dataset.ordered = "0";
         }
 
         const emptyElement = document.getElementById("store-cart-empty");
@@ -187,6 +188,7 @@
         if (cartPage.dataset.ordered === "1") {
             activeStore.removeItem(storageKey);
             cart = [];
+            cartPage.dataset.ordered = "0";
         }
 
         const emptyElement = document.getElementById("cart-empty");

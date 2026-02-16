@@ -23,6 +23,7 @@
 						<th>Total</th>
 						<th>Statut</th>
 						<th>Détails</th>
+						<th class="text-end">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -34,7 +35,7 @@
 							<td>{{ commande.createdAt ? commande.createdAt|date('d/m/Y H:i') : '-' }}</td>
 							<td><strong>{{ commande.total|number_format(2, ',', ' ') }} €</strong></td>
 							<td>
-								{% set badgeClass = commande.status == 'Livrée' ? 'bg-success' : (commande.status == 'Annulée' ? 'bg-danger' : 'bg-warning text-dark') %}
+								{% set badgeClass = commande.status == 'Livrée' ? 'bg-success' : (commande.status == 'Commande annulée' ? 'bg-danger' : (commande.status == 'En livraison' ? 'bg-primary' : 'bg-warning text-dark')) %}
 								<span class="badge {{ badgeClass }}">{{ commande.status }}</span>
 							</td>
 							<td>
@@ -48,6 +49,23 @@
 									<small class="text-light-emphasis">...</small>
 								{% endif %}
 							</td>
+							<td class="text-end">
+								<div class="d-inline-flex gap-2">
+									{% if commande.status == 'En attente' or commande.status == 'En livraison' %}
+										<form method="post" action="{{ path('orders_cancel', {'id': commande.id}) }}" class="d-inline">
+											<input type="hidden" name="_token" value="{{ csrf_token('cancel_order_' ~ commande.id) }}">
+											<button type="submit" class="btn btn-sm btn-outline-warning">Annuler</button>
+										</form>
+									{% endif %}
+
+									{% if commande.status == 'Livrée' or commande.status == 'Commande annulée' %}
+										<form method="post" action="{{ path('orders_clear', {'id': commande.id}) }}" class="d-inline">
+											<input type="hidden" name="_token" value="{{ csrf_token('clear_order_' ~ commande.id) }}">
+											<button type="submit" class="btn btn-sm btn-danger" title="Supprimer de la page">✕</button>
+										</form>
+									{% endif %}
+								</div>
+							</td>
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -55,4 +73,3 @@
 		</div>
 	{% endif %}
 {% endblock %}
-
