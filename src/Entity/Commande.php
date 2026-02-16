@@ -27,9 +27,13 @@ class Commande
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(length: 30)]
+    private ?string $status = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->status = 'En attente';
     }
 
     public function getId(): ?int
@@ -81,6 +85,18 @@ class Commande
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

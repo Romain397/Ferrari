@@ -21,11 +21,8 @@
 					<a class="nav-link" href="{{ path('store') }}">Store</a>
 				</li>
 
-				<li class="nav-item position-relative">
-					<a class="nav-link" href="{{ path('cart_index') }}">
-						Panier
-						<span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark text-danger">0</span>
-					</a>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('orders_index') }}">Commandes</a>
 				</li>
 
 				{% if app.user %}

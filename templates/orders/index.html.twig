@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Commandes
+{% endblock %}
+
+{% block main %}
+	<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+		<h1 class="mb-0 text-danger">Mes Commandes</h1>
+		<a href="{{ path('store') }}" class="btn btn-secondary">Retour au Store</a>
+	</div>
+
+	{% if commandes is empty %}
+		<div class="alert alert-dark border border-danger">
+			Aucune commande pour le moment.
+		</div>
+	{% else %}
+		<div class="table-responsive">
+			<table class="table table-striped table-hover align-middle">
+				<thead class="table-dark">
+					<tr>
+						<th>N° commande</th>
+						<th>Date</th>
+						<th>Total</th>
+						<th>Statut</th>
+						<th>Détails</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for commande in commandes %}
+						<tr>
+							<td>
+								<strong class="text-danger">CMD-{{ '%06d'|format(commande.id) }}</strong>
+							</td>
+							<td>{{ commande.createdAt ? commande.createdAt|date('d/m/Y H:i') : '-' }}</td>
+							<td><strong>{{ commande.total|number_format(2, ',', ' ') }} €</strong></td>
+							<td>
+								{% set badgeClass = commande.status == 'Livrée' ? 'bg-success' : (commande.status == 'Annulée' ? 'bg-danger' : 'bg-warning text-dark') %}
+								<span class="badge {{ badgeClass }}">{{ commande.status }}</span>
+							</td>
+							<td>
+								<small class="text-light-emphasis d-block mb-1">{{ commande.items|length }} article(s)</small>
+								{% for item in commande.items|slice(0, 2) %}
+									<div class="small">
+										{{ item.quantity }} x {{ item.name }}
+									</div>
+								{% endfor %}
+								{% if commande.items|length > 2 %}
+									<small class="text-light-emphasis">...</small>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% endif %}
+{% endblock %}
+

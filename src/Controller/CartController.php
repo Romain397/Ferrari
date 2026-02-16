@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Commande;
 use App\Entity\User;
+use App\Repository\CommandeRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,9 +16,29 @@ use Symfony\Component\Routing\Attribute\Route;
 class CartController extends AbstractController
 {
     #[Route('/panier', name: 'cart_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(): RedirectResponse
     {
-        return $this->render('cart/index.html.twig');
+        return $this->redirectToRoute('orders_index');
+    }
+
+    #[Route('/commandes', name: 'orders_index', methods: ['GET'])]
+    public function orders(CommandeRepository $commandeRepository): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->addFlash('warning', 'Connectez-vous pour consulter vos commandes.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        $commandes = $commandeRepository->findBy(
+            ['user' => $user],
+            ['createdAt' => 'DESC', 'id' => 'DESC']
+        );
+
+        return $this->render('orders/index.html.twig', [
+            'commandes' => $commandes,
+        ]);
     }
 
     #[Route('/panier/commander', name: 'cart_checkout', methods: ['POST'])]
@@ -28,14 +49,14 @@ class CartController extends AbstractController
     ): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('cart_checkout', (string) $request->request->get('_token'))) {
-            $this->addFlash('success', 'Requete invalide.');
-            return $this->redirectToRoute('cart_index');
+            $this->addFlash('danger', 'Requête invalide.');
+            return $this->redirectToRoute('store');
         }
 
         $user = $this->getUser();
 
         if (!$user instanceof User) {
-            $this->addFlash('success', 'Connectez-vous pour passer votre commande.');
+            $this->addFlash('warning', 'Connectez-vous pour passer votre commande.');
             return $this->redirectToRoute('app_login');
         }
 
@@ -43,8 +64,8 @@ class CartController extends AbstractController
         $items = json_decode($rawItems, true);
 
         if (!is_array($items) || $items === []) {
-            $this->addFlash('success', 'Votre panier est vide.');
-            return $this->redirectToRoute('cart_index');
+            $this->addFlash('warning', 'Votre panier est vide.');
+            return $this->redirectToRoute('store');
         }
 
         $total = 0.0;
@@ -84,20 +105,23 @@ class CartController extends AbstractController
         }
 
         if ($normalizedItems === []) {
-            $this->addFlash('success', 'Votre panier est vide.');
-            return $this->redirectToRoute('cart_index');
+            $this->addFlash('warning', 'Votre panier est vide.');
+            return $this->redirectToRoute('store');
         }
 
         $commande = new Commande();
+        $timezone = new \DateTimeZone($_ENV['APP_TIMEZONE'] ?? 'Europe/Paris');
+        $commande->setCreatedAt(new \DateTimeImmutable('now', $timezone));
         $commande->setUser($user);
         $commande->setItems($normalizedItems);
         $commande->setTotal($total);
+        $commande->setStatus('En attente');
 
         $entityManager->persist($commande);
         $entityManager->flush();
 
         $this->addFlash('success', 'Commande enregistrée avec succès.');
 
-        return $this->redirectToRoute('cart_index', ['ordered' => 1]);
+        return $this->redirectToRoute('store', ['ordered' => 1]);
     }
 }
