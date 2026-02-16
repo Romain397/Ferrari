@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Config\Type;
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,12 +16,47 @@ class ProductController extends AbstractController
 {
     // ───────────── Liste des produits (publique) ─────────────
     #[Route('/store', name: 'store')]
-    public function index(ManagerRegistry $doctrine): Response
+    public function index(Request $request, ProductRepository $productRepository): Response
     {
-        $products = $doctrine->getRepository(Product::class)->findAll();
+        $minRaw = trim((string) $request->query->get('min_price', ''));
+        $maxRaw = trim((string) $request->query->get('max_price', ''));
+
+        $filters = [
+            'q' => (string) $request->query->get('q', ''),
+            'type' => (string) $request->query->get('type', ''),
+            'min_price' => $minRaw !== '' ? (float) $minRaw : null,
+            'max_price' => $maxRaw !== '' ? (float) $maxRaw : null,
+            'sort' => (string) $request->query->get('sort', 'recent'),
+        ];
+
+        if ($filters['min_price'] !== null && $filters['min_price'] < 0) {
+            $filters['min_price'] = 0.0;
+        }
+
+        if ($filters['max_price'] !== null && $filters['max_price'] < 0) {
+            $filters['max_price'] = null;
+        }
+
+        if ($filters['min_price'] !== null && $filters['max_price'] !== null && $filters['min_price'] > $filters['max_price']) {
+            [$filters['min_price'], $filters['max_price']] = [$filters['max_price'], $filters['min_price']];
+        }
+
+        $products = $productRepository->findForStore($filters);
+
+        $typeOptions = [];
+        foreach (Type::cases() as $case) {
+            $typeOptions[$case->value] = match ($case->value) {
+                'merch' => 'Merchandising',
+                'accessoire' => 'Accessoire',
+                'vetement' => 'Vêtement',
+                default => ucfirst($case->value),
+            };
+        }
 
         return $this->render('store/index.html.twig', [
-            'products' => $products
+            'products' => $products,
+            'filters' => $filters,
+            'typeOptions' => $typeOptions,
         ]);
     }
 

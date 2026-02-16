@@ -5,6 +5,62 @@
 
 {% block main %}
 	<h1 class="text-danger mb-4">Store</h1>
+
+	<div class="store-filters-bar mb-4">
+		<form method="get" action="{{ path('store') }}" class="row g-2 align-items-end">
+			<div class="col-12 col-md-5 col-lg-3">
+				<label for="filter-q" class="form-label form-label-sm mb-1 text-light-emphasis">Recherche</label>
+				<input
+				type="text"
+				class="form-control form-control-sm"
+				id="filter-q"
+				name="q"
+				value="{{ filters.q|default('') }}"
+				placeholder="Nom ou description">
+			</div>
+
+			<div class="col-6 col-md-3 col-lg-2">
+				<label for="filter-type" class="form-label form-label-sm mb-1 text-light-emphasis">Type</label>
+				<select id="filter-type" name="type" class="form-select form-select-sm">
+					<option value="">Tous</option>
+					{% for value, label in typeOptions %}
+						<option value="{{ value }}" {% if filters.type == value %}selected{% endif %}>{{ label }}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<div class="col-6 col-md-2 col-lg-2">
+				<label for="filter-min-price" class="form-label form-label-sm mb-1 text-light-emphasis">Min €</label>
+				<input type="number" step="0.01" min="0" class="form-control form-control-sm" id="filter-min-price" name="min_price" value="{{ filters.min_price is not null ? filters.min_price : '' }}">
+			</div>
+
+			<div class="col-6 col-md-2 col-lg-2">
+				<label for="filter-max-price" class="form-label form-label-sm mb-1 text-light-emphasis">Max €</label>
+				<input type="number" step="0.01" min="0" class="form-control form-control-sm" id="filter-max-price" name="max_price" value="{{ filters.max_price is not null ? filters.max_price : '' }}">
+			</div>
+
+			<div class="col-12 col-md-4 col-lg-3">
+				<label for="filter-sort" class="form-label form-label-sm mb-1 text-light-emphasis">Tri</label>
+				<select id="filter-sort" name="sort" class="form-select form-select-sm">
+					<option value="recent" {% if filters.sort == 'recent' %}selected{% endif %}>Plus récents</option>
+					<option value="oldest" {% if filters.sort == 'oldest' %}selected{% endif %}>Plus anciens</option>
+					<option value="price_asc" {% if filters.sort == 'price_asc' %}selected{% endif %}>Prix croissant</option>
+					<option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Prix décroissant</option>
+					<option value="name_asc" {% if filters.sort == 'name_asc' %}selected{% endif %}>Nom A → Z</option>
+					<option value="name_desc" {% if filters.sort == 'name_desc' %}selected{% endif %}>Nom Z → A</option>
+				</select>
+			</div>
+
+			<div class="col-12 d-flex gap-2 flex-wrap align-items-center">
+				<button type="submit" class="btn btn-danger btn-sm">Appliquer</button>
+				<a href="{{ path('store') }}" class="btn btn-secondary btn-sm">Reset</a>
+				<small class="ms-auto align-self-center text-light-emphasis">
+					{{ products|length }} produit(s)
+				</small>
+			</div>
+		</form>
+	</div>
+
 	<div class="row g-4 store-layout">
 		<div class="col-12 col-xl-8">
 			<div class="row">
