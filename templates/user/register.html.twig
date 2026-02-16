@@ -20,16 +20,16 @@
 				</div>
 			{% endfor %}
 
-			{{form_start(form)}}
-			{{form_row(form.firstName)}}
-			{{form_row(form.lastName)}}
-			{{form_row(form.email)}}
-			{{form_row(form.password)}}
-			<input type="submit" value="S'inscrire" />
-			{{form_end(form)}}
+			{{ form_start(form) }}
+			{{ form_row(form.firstName, {'attr': {'class': 'form-control'}}) }}
+			{{ form_row(form.lastName, {'attr': {'class': 'form-control'}}) }}
+			{{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
+			{{ form_row(form.password, {'attr': {'class': 'form-control'}}) }}
+			<button type="submit" class="btn btn-danger w-100">S'inscrire</button>
+			{{ form_end(form) }}
 
 			<div class="text-center mt-3">
-				<a href="{{ path('app_login') }}" class="text-decoration-none">
+				<a href="{{ path('app_login') }}" class="text-decoration-none text-warning">
 					Déjà un compte ?
 					<strong>Login</strong>
 				</a>

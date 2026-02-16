@@ -1,706 +1,217 @@
-/* ========================================== */
-/* FERRARI - STYLE GUIDE                      */
-/* Charte: Rouge Ferrari (#e10600) + Noir     */
-/* ========================================== */
-
-/* ────────────────────────────────────────── */
-/* VARIABLES CSS & RESET                      */
-/* ────────────────────────────────────────── */
 :root {
     --ferrari-red: #e10600;
     --ferrari-dark: #8b0000;
     --ferrari-gold: #ffd700;
-    --dark-bg: #0c0c0c;
     --card-bg: #1c1c1c;
     --form-bg: #2a2a2a;
-    --text-light: #f5f5f5;
-    --text-muted: #e5e5e5;
-    --border-radius-sm: 10px;
-    --border-radius-md: 15px;
-    --border-radius-lg: 25px;
+
+    --bs-body-bg: #0c0c0c;
+    --bs-body-color: #f5f5f5;
+    --bs-danger: var(--ferrari-red);
+    --bs-danger-rgb: 225, 6, 0;
+    --bs-warning: var(--ferrari-gold);
+    --bs-warning-rgb: 255, 215, 0;
+    --bs-secondary: #555;
+    --bs-secondary-rgb: 85, 85, 85;
+    --bs-border-radius-xl: 1.5rem;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* ────────────────────────────────────────── */
-/* TYPOGRAPHIE & BASE                         */
-/* ────────────────────────────────────────── */
-html {
-    scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: var(--dark-bg);
-    color: var(--text-light);
     line-height: 1.6;
 }
+
+a, .btn, .nav-link, .card { transition: all .3s ease; }
 
 h1, h2, h3, h4, h5, h6 {
     color: var(--ferrari-red);
     font-weight: 800;
     letter-spacing: 1px;
-    margin-bottom: 20px;
 }
 
-p {
-    color: var(--text-muted);
-    margin-bottom: 15px;
-}
+p { color: #e5e5e5; }
 
-a {
-    transition: all 0.3s ease;
-}
-
-/* ────────────────────────────────────────── */
-/* NAVBAR / HEADER                            */
-/* ────────────────────────────────────────── */
 .navbar {
     background: linear-gradient(90deg, var(--ferrari-dark), var(--ferrari-red)) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-    border-bottom-left-radius: var(--border-radius-lg);
-    border-bottom-right-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .7);
+    border-radius: 0 0 1.5rem 1.5rem;
 }
 
 .navbar-brand {
     font-weight: 800;
     letter-spacing: 2px;
     text-transform: uppercase;
-    font-size: 1.5rem;
-    color: #fff !important;
-    transition: all 0.3s ease;
-}
-
-.navbar-brand:hover {
-    color: var(--ferrari-gold) !important;
 }
 
 .nav-link {
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: .5px;
     text-transform: uppercase;
     position: relative;
-    color: #fff !important;
-    transition: all 0.3s ease;
 }
 
 .nav-link::after {
     content: "";
     position: absolute;
+    left: 0;
+    bottom: -5px;
     width: 0;
     height: 3px;
-    bottom: -5px;
-    left: 0;
+    border-radius: 999px;
     background-color: var(--ferrari-gold);
-    border-radius: var(--border-radius-sm);
-    transition: width 0.3s ease;
+    transition: width .3s ease;
 }
 
-.nav-link:hover::after {
-    width: 100%;
-}
+.nav-link:hover::after { width: 100%; }
+.nav-link:hover, .navbar-brand:hover { color: var(--ferrari-gold) !important; }
 
-.nav-link:hover {
-    color: var(--ferrari-gold) !important;
-}
-
-/* Logo responsive */
 .navbar-logo {
-    max-width: 30px;
+    width: clamp(30px, 4vw, 55px);
     height: auto;
     object-fit: contain;
-    transition: transform 0.3s ease;
 }
 
-.navbar-logo:hover {
-    transform: scale(1.1);
-}
-
-@media (min-width: 576px) {
-    .navbar-logo {
-        max-width: 40px;
-    }
-}
-
-@media (min-width: 768px) {
-    .navbar-logo {
-        max-width: 45px;
-    }
-}
-
-@media (min-width: 992px) {
-    .navbar-logo {
-        max-width: 50px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .navbar-logo {
-        max-width: 55px;
-    }
-}
-
-/* ────────────────────────────────────────── */
-/* MAIN CONTAINER                             */
-/* ────────────────────────────────────────── */
-main.container {
-    max-width: 1200px;
-    margin: 60px auto;
-    padding: 0 20px;
-}
-
-main {
-    min-height: 70vh;
-}
-
-/* ────────────────────────────────────────── */
-/* CARTES (POSTS / PRODUITS / COURSES)        */
-/* ────────────────────────────────────────── */
-.cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-    margin-top: 40px;
-}
+main { min-height: 70vh; }
 
 .card {
     background-color: var(--card-bg);
-    border: none;
-    border-radius: var(--border-radius-lg);
+    border: 0;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .5);
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    transition: all 0.4s ease;
-    min-width: 300px;
-    max-width: 360px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
 }
 
 .card:hover {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 20px 40px rgba(225, 0, 0, 0.5);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(225, 0, 0, .45);
 }
 
-.card img {
-    width: 100%;
+.card-img-top,
+.store-product-image,
+.card-img-placeholder {
     height: 220px;
-    object-fit: cover;
-    display: block;
-}
-
-.card-body {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-}
-
-.card-body p {
-    flex-grow: 1;
-}
-
-/* Ciblage local des couleurs pour les cartes Sport Auto / Store */
-.sport-date {
-    color: var(--ferrari-gold) !important;
-    font-weight: 600;
-}
-
-.store-product-title {
-    color: var(--ferrari-red) !important;
-}
-
-.store-card .store-product-image {
     width: 100%;
-    height: 220px;
     object-fit: cover;
-    object-position: center;
-}
-
-@media (max-width: 768px) {
-    .store-card .store-product-image {
-        height: 220px;
-    }
-}
-
-.card.highlight {
-    border: 2px solid var(--ferrari-gold);
-    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4);
 }
 
 .card-img-placeholder {
-    height: 220px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #444;
-    color: var(--text-muted);
+    display: grid;
+    place-items: center;
+    background: #444;
+    color: #e5e5e5;
     font-weight: 600;
 }
 
-/* ────────────────────────────────────────── */
-/* FORMULAIRES                                */
-/* ────────────────────────────────────────── */
-.card.bg-dark {
-    background-color: var(--card-bg) !important;
-    border: 1px solid var(--ferrari-red);
+.highlight {
+    border: 2px solid var(--ferrari-gold);
+    box-shadow: 0 20px 40px rgba(255, 215, 0, .35);
 }
 
-form {
+main form:not(.checkout-form-inline):not(.d-inline) {
     background-color: var(--card-bg);
+    border-radius: 1.5rem;
     padding: 2.5rem;
-    border-radius: var(--border-radius-lg);
-    box-shadow: 0 0 30px rgba(225, 0, 0, 0.3);
+    box-shadow: 0 0 30px rgba(225, 0, 0, .25);
 }
 
-form label {
-    color: var(--text-light) !important;
-    font-weight: 600;
-    margin-bottom: 10px;
-    display: block;
-}
-
-form input,
-form textarea,
-form select {
-    background-color: var(--form-bg) !important;
-    border: 1px solid var(--ferrari-red) !important;
-    color: var(--text-light) !important;
-    border-radius: var(--border-radius-md) !important;
-    padding: 0.75rem 1rem !important;
-    margin-bottom: 15px !important;
-    transition: all 0.3s ease;
-}
-
-form input:focus,
-form textarea:focus,
-form select:focus {
-    outline: none !important;
-    box-shadow: 0 0 10px var(--ferrari-red) !important;
-    border-color: var(--ferrari-gold) !important;
-}
-
-form input::placeholder,
-form textarea::placeholder {
-    color: #999 !important;
-}
-
-/* ────────────────────────────────────────── */
-/* FORMULAIRES ADMIN (CRUD)                   */
-/* ────────────────────────────────────────── */
 .card.bg-dark form {
-    padding: 2.5rem;
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    max-width: 100%;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0;
 }
 
-.card.bg-dark {
-    margin-bottom: 2rem;
-    max-width: 100%;
+.form-label,
+main form label {
+    color: #f5f5f5;
+    font-weight: 600;
 }
 
-.row.mb-3 {
-    margin-bottom: 2rem !important;
-    display: flex;
-    flex-wrap: wrap;
+.form-control,
+.form-select,
+main form input,
+main form textarea,
+main form select {
+    background-color: var(--form-bg) !important;
+    border-color: var(--ferrari-red) !important;
+    color: #f5f5f5 !important;
+    border-radius: 1rem;
 }
 
-form .row .col-md-6,
-form .row .col-md-4,
-form .row .col-md-12 {
-    margin-bottom: 1rem;
-    padding: 0 1rem;
-    flex: 1 1 calc(50% - 2rem);
+.form-control:focus,
+.form-select:focus,
+main form input:focus,
+main form textarea:focus,
+main form select:focus {
+    border-color: var(--ferrari-gold) !important;
+    box-shadow: 0 0 0 .25rem rgba(225, 6, 0, .25);
 }
 
-form .row .col-md-4 {
-    flex: 1 1 calc(33.33% - 2rem);
-}
+.form-control::placeholder,
+main form input::placeholder,
+main form textarea::placeholder { color: #999; }
 
-form .row .col-md-12 {
-    flex: 1 1 calc(100% - 2rem);
-}
+.form-check-input { border-color: var(--ferrari-red); }
+.form-check-input:checked { background-color: var(--ferrari-red); border-color: var(--ferrari-red); }
 
-form input,
-form textarea,
-form select {
-    width: 100% !important;
-    min-height: 40px;
-}
-
-form label {
-    margin-bottom: 0.75rem !important;
-    font-size: 1rem;
-}
-
-form .form-group {
-    margin-bottom: 1.5rem;
-}
-
-/* Sections conditionnelles (voiture/course) */
 .voiture-section,
 .course-section {
-    padding: 2rem;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius-md);
-    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
     border-left: 4px solid var(--ferrari-red);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, .04);
 }
 
-.voiture-section h4,
-.course-section h4 {
-    margin-bottom: 1.5rem;
-    font-size: 1.2rem;
+.btn {
+    border-radius: 999px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: .5px;
 }
 
-.voiture-section .row,
-.course-section .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.voiture-section .row .col-md-6,
-.course-section .row .col-md-6 {
-    flex: 1 1 calc(50% - 0.5rem);
-    padding: 0;
-}
-
-.voiture-section .row .col-md-12,
-.course-section .row .col-md-12 {
-    flex: 1 1 100%;
-    padding: 0;
-}
-
-/* ────────────────────────────────────────── */
-/* TABLEAUX ADMIN                             */
-/* ────────────────────────────────────────── */
-.table-responsive {
-    margin-top: 3rem;
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
+.btn-danger:hover,
+button[type="submit"].btn-danger:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(225, 0, 0, .35);
 }
 
 .table {
-    margin-bottom: 0;
-    width: 100%;
+    --bs-table-bg: transparent;
+    --bs-table-color: #f5f5f5;
+    --bs-table-border-color: #333;
+    --bs-table-hover-bg: #222;
 }
 
 .table thead th {
-    padding: 1.25rem !important;
-    font-size: 0.95rem;
-    font-weight: 600;
-}
-
-.table tbody td {
-    padding: 1.25rem !important;
-    vertical-align: middle;
-    font-size: 0.95rem;
-}
-
-.table tbody tr {
-    border-bottom: 1px solid #333 !important;
-}
-
-/* Actions dans les tableaux */
-.table .btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-    margin: 2px;
-    white-space: nowrap;
+    color: var(--ferrari-gold);
+    border-color: var(--ferrari-red);
 }
 
 .table form {
     display: inline;
-    padding: 0;
-    background: none;
-    box-shadow: none;
-    border: none;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
 }
 
-.table form .btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-}
+.table .btn-sm { white-space: nowrap; }
 
-/* ────────────────────────────────────────── */
-/* BOUTONS                                    */
-/* ────────────────────────────────────────── */
-.btn,
-button {
-    border-radius: 50px;
-    padding: 0.75rem 2rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-size: 0.95rem;
-}
-
-.btn-danger,
-button[type="submit"] {
-    background-color: var(--ferrari-red);
-    color: #fff;
-}
-
-.btn-danger:hover,
-button[type="submit"]:hover {
-    background-color: var(--ferrari-dark);
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(225, 0, 0, 0.4);
-}
-
-.btn-secondary {
-    background-color: #555;
-    color: #fff;
-}
-
-.btn-secondary:hover {
-    background-color: #777;
-    transform: scale(1.05);
-}
-
-.btn-success {
-    background-color: #28a745;
-    color: #fff;
-}
-
-.btn-success:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
-
-.btn.w-100 {
-    width: 100%;
-}
-
-/* ────────────────────────────────────────── */
-/* BADGES & LABELS                            */
-/* ────────────────────────────────────────── */
-.badge {
-    padding: 0.5rem 1rem;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.85rem;
-}
-
-.badge.bg-danger {
-    background-color: var(--ferrari-red) !important;
-}
-
-.badge.bg-warning {
-    background-color: var(--ferrari-gold) !important;
-    color: #000 !important;
-}
-
-.badge.bg-dark {
-    background-color: #333 !important;
-}
-
-/* ────────────────────────────────────────── */
-/* TABLEAUX                                   */
-/* ────────────────────────────────────────── */
-.table {
-    color: var(--text-light);
-    border-color: #333;
-}
-
-.table thead {
-    background-color: #1a1a1a;
-    border-color: var(--ferrari-red);
-}
-
-.table th {
-    color: var(--ferrari-gold);
-    font-weight: 600;
-    border-color: var(--ferrari-red);
-}
-
-.table td {
-    border-color: #333;
-    vertical-align: middle;
-}
-
-.table tbody tr {
-    transition: background-color 0.3s ease;
-}
-
-.table tbody tr:hover {
-    background-color: #222;
-}
-
-/* ────────────────────────────────────────── */
-/* FOOTER                                     */
-/* ────────────────────────────────────────── */
-footer {
-    margin-top: 80px;
-    padding: 40px 0;
-    color: #999;
-    font-size: 14px;
-    border-top: 1px solid #333;
-    text-align: center;
-    background-color: #0a0a0a;
-}
-
-footer a {
-    color: var(--ferrari-gold);
-    text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* ────────────────────────────────────────── */
-/* RESPONSIVE DESIGN                          */
-/* ────────────────────────────────────────── */
-@media (max-width: 768px) {
-    .navbar-brand {
-        font-size: 1.2rem;
-    }
-
-    h1 {
-        font-size: 1.8rem;
-    }
-
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    .cards {
-        gap: 20px;
-        justify-content: center;
-    }
-
-    .card {
-        min-width: 100%;
-        max-width: 100%;
-        margin: 0 auto;
-    }
-
-    form {
-        padding: 1.5rem;
-    }
-
-    main.container {
-        margin: 40px auto;
-    }
-}
-
-@media (max-width: 576px) {
-    main.container {
-        padding: 0 10px;
-    }
-
-    .navbar-brand {
-        font-size: 1rem;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    .btn {
-        padding: 0.6rem 1.5rem;
-        font-size: 0.85rem;
-    }
-
-    form label {
-        font-size: 0.95rem;
-    }
-}
-
-/* ────────────────────────────────────────── */
-/* UTILITAIRES                                */
-/* ────────────────────────────────────────── */
-.text-danger {
-    color: var(--ferrari-red) !important;
-}
-
-.text-gold {
-    color: var(--ferrari-gold) !important;
-}
-
-.bg-dark {
-    background-color: var(--card-bg) !important;
-}
-
-.border-danger {
-    border-color: var(--ferrari-red) !important;
-}
-
-.shadow-lg {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important;
-}
-
-.rounded-4 {
-    border-radius: var(--border-radius-lg) !important;
-}
-
-/* ────────────────────────────────────────── */
-/* ANIMATIONS & TRANSITIONS                   */
-/* ────────────────────────────────────────── */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease;
-}
-
-.summary {
-    margin-top: 2rem;
-    font-style: italic;
-    color: #ccc;
-}
-
-/* ────────────────────────────────────────── */
-/* PANIER                                    */
-/* ────────────────────────────────────────── */
 .checkout-form-inline {
     background: transparent !important;
     box-shadow: none !important;
     padding: 0 !important;
-    border: none !important;
 }
 
-/* ----------------------------------------- */
-/* FOOTER                                     */
-/* ----------------------------------------- */
+.summary { color: #ccc; font-style: italic; }
+
 footer {
     background-color: #0a0a0a;
-    text-align: center;
-    padding: 25px;
-    margin-top: 80px;
-    color: #aaaaaa;
-    font-size: 14px;
     border-top: 1px solid #333;
-    border-radius: 20px 20px 0 0;
+    border-radius: 1.25rem 1.25rem 0 0;
 }
 
-/* ----------------------------------------- */
-/* RESPONSIVE GRID POUR MOBILE               */
-/* ----------------------------------------- */
 @media (max-width: 768px) {
-    .cards {
-        flex-direction: column;
-        gap: 20px;
-    }
+    main form:not(.checkout-form-inline):not(.d-inline) { padding: 1.5rem; }
 }
