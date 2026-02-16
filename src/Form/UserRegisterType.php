@@ -17,11 +17,11 @@ class UserRegisterType extends AbstractType
         $builder
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
-                'attr' => ['placeholder' => 'Ex. Jean'],
+                'attr' => ['placeholder' => 'Enzo'],
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom',
-                'attr' => ['placeholder' => 'Ex. Dupont'],
+                'attr' => ['placeholder' => 'Ferrari'],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',

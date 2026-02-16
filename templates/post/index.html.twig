@@ -34,13 +34,12 @@
 					{% endif %}
 
 					<div class="card-body d-flex flex-column">
-						<h3>{{ post.title }}
+						<h3 class="h5">{{ post.title }}
 							<small class="text-warning">({{ post.model }})</small>
 						</h3>
 
-						{% if post.content %}
-							<p class="flex-grow-1">{{ post.content }}</p>
-						{% endif %}
+						{% set fullDescription = post.content|default('')|trim %}
+						<p class="card-text">{{ fullDescription ?: 'Aucune description.' }}</p>
 
 						<p class="text-warning mb-2">Année :
 							{{ post.year }}</p>
@@ -81,4 +80,3 @@
 		<strong>{{ posts|length }}</strong>
 	</p>
 {% endblock %}
-
