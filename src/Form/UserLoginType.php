@@ -15,14 +15,14 @@ class UserLoginType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Adresse e-mail',
                 'attr' => [
-                    'placeholder' => 'exemple@domain.com',
+                    'placeholder' => 'exemple@domaine.com',
                     'class' => 'form-control'
                 ]
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'attr' => [
-                    'placeholder' => 'Votre mot de passe',
+                    'placeholder' => 'Saisissez votre mot de passe',
                     'class' => 'form-control'
                 ]
             ])

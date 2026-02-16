@@ -15,12 +15,12 @@
 			<form method="post" action="{{ path('app_login') }}">
 				<div class="mb-3">
 					<label for="email" class="form-label">Email</label>
-					<input type="email" name="_username" id="email" value="{{ last_username }}" class="form-control" required autofocus>
+					<input type="email" name="_username" id="email" value="{{ last_username }}" class="form-control" placeholder="exemple@domaine.com" required autofocus>
 				</div>
 
 				<div class="mb-3">
 					<label for="password" class="form-label">Mot de passe</label>
-					<input type="password" name="_password" id="password" class="form-control" required>
+					<input type="password" name="_password" id="password" class="form-control" placeholder="Saisissez votre mot de passe" required>
 				</div>
 
 				<button type="submit" class="btn btn-danger w-100">Se connecter</button>

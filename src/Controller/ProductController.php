@@ -8,12 +8,16 @@ use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProductController extends AbstractController
 {
+    private const PRODUCT_UPLOAD_DIR = 'uploads/products';
+
     // ───────────── Liste des produits (publique) ─────────────
     #[Route('/store', name: 'store')]
     public function index(Request $request, ProductRepository $productRepository): Response
@@ -62,7 +66,7 @@ class ProductController extends AbstractController
 
     // ───────────── Gérer les produits (admin) ─────────────
     #[Route('/admin/store/manage', name: 'manage_store')]
-    public function manage(ManagerRegistry $doctrine, Request $request): Response
+    public function manage(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
     {
         $products = $doctrine->getRepository(Product::class)->findAll();
 
@@ -71,6 +75,14 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $form->get('imageFile')->getData();
+            if ($uploadedFile instanceof UploadedFile) {
+                $product->setImage($this->uploadProductImage($uploadedFile, $slugger));
+            } else {
+                $this->addFlash('warning', 'Veuillez sélectionner une image depuis votre ordinateur.');
+                return $this->redirectToRoute('manage_store');
+            }
+
             $product->setUser($this->getUser());
             $em = $doctrine->getManager();
             $em->persist($product);
@@ -88,13 +100,21 @@ class ProductController extends AbstractController
 
     // ───────────── Ajouter un produit ─────────────
     #[Route('/store/create', name: 'store_create')]
-    public function create(ManagerRegistry $doctrine, Request $request): Response
+    public function create(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $form->get('imageFile')->getData();
+            if ($uploadedFile instanceof UploadedFile) {
+                $product->setImage($this->uploadProductImage($uploadedFile, $slugger));
+            } else {
+                $this->addFlash('warning', 'Veuillez sélectionner une image depuis votre ordinateur.');
+                return $this->redirectToRoute('store_create');
+            }
+
             $product->setUser($this->getUser()); // associe le produit à l'utilisateur
             $em = $doctrine->getManager();
             $em->persist($product);
@@ -123,12 +143,17 @@ class ProductController extends AbstractController
 
     // ───────────── Modifier un produit ─────────────
     #[Route('/store/edit/{id}', name: 'store_edit')]
-    public function edit(ManagerRegistry $doctrine, Request $request, Product $product): Response
+    public function edit(ManagerRegistry $doctrine, Request $request, Product $product, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $form->get('imageFile')->getData();
+            if ($uploadedFile instanceof UploadedFile) {
+                $product->setImage($this->uploadProductImage($uploadedFile, $slugger));
+            }
+
             $em = $doctrine->getManager();
             $em->flush();
 
@@ -140,6 +165,23 @@ class ProductController extends AbstractController
             'form' => $form->createView(),
             'product' => $product
         ]);
+    }
+
+    private function uploadProductImage(UploadedFile $uploadedFile, SluggerInterface $slugger): string
+    {
+        $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $slugger->slug($originalFilename);
+        $extension = $uploadedFile->guessExtension() ?: 'bin';
+        $newFilename = sprintf('%s-%s.%s', $safeFilename, uniqid('', true), $extension);
+
+        $uploadAbsolutePath = $this->getParameter('kernel.project_dir') . '/public/' . self::PRODUCT_UPLOAD_DIR;
+        if (!is_dir($uploadAbsolutePath)) {
+            mkdir($uploadAbsolutePath, 0775, true);
+        }
+
+        $uploadedFile->move($uploadAbsolutePath, $newFilename);
+
+        return self::PRODUCT_UPLOAD_DIR . '/' . $newFilename;
     }
 }
 

@@ -12,11 +12,18 @@
 			</div>
 
 			{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-				{{ form_row(form.name, {'label': 'Nom du produit', 'attr': {'class': 'form-control', 'placeholder': 'Ex: T-shirt Ferrari'}}) }}
+				{{ form_row(form.name, {'label': 'Nom du produit', 'attr': {'class': 'form-control', 'placeholder': 'Ex. Lunettes Ray-Ban Ferrari'}}) }}
 				{{ form_row(form.type, {'label': 'Type de produit', 'attr': {'class': 'form-select'}}) }}
-				{{ form_row(form.price, {'label': 'Prix (€)', 'attr': {'class': 'form-control', 'placeholder': '49.99', 'step': '0.01', 'min': '0'}}) }}
-				{{ form_row(form.description, {'label': 'Description', 'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Description du produit...'}}) }}
-				{{ form_row(form.image, {'label': 'Image du produit (URL)', 'attr': {'class': 'form-control', 'placeholder': 'https://example.com/image.jpg'}}) }}
+				{{ form_row(form.price, {'label': 'Prix (€)', 'attr': {'class': 'form-control', 'placeholder': 'Ex. 49.99', 'step': '0.01', 'min': '0'}}) }}
+				{{ form_row(form.description, {'label': 'Description', 'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Décrivez le produit (matière, taille, usage...)'}}) }}
+				{{ form_row(form.imageFile, {'label': 'Remplacer l’image (fichier local)'}) }}
+
+				{% if product.image %}
+					<div class="mb-3">
+						<small class="text-light-emphasis d-block mb-2">Image actuelle</small>
+						<img src="{{ asset(product.image) }}" alt="{{ product.name }}" class="img-fluid rounded border border-secondary" style="max-height: 140px;">
+					</div>
+				{% endif %}
 
 				<div class="d-flex gap-2 mt-4">
 					<button type="submit" class="btn btn-danger w-100">Mettre à jour</button>

@@ -17,18 +17,18 @@ class UserType extends AbstractType
         $builder
             ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
-                'attr' => ['placeholder' => 'John'],
+                'attr' => ['placeholder' => 'Ex. Jean'],
             ])
             ->add('lastName', TextType::class, [
                 'label' => 'Nom',
-                'attr' => ['placeholder' => 'Doe'],
+                'attr' => ['placeholder' => 'Ex. Dupont'],
             ])
             ->add('email', EmailType::class, [
-                'attr' => ['placeholder' => 'john.doe@mail.com'],
+                'attr' => ['placeholder' => 'exemple@domaine.com'],
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
-                'attr' => ['placeholder' => 'password'],
+                'attr' => ['placeholder' => '8 caractères minimum'],
             ])
         ;
     }

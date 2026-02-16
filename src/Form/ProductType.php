@@ -5,12 +5,14 @@ namespace App\Form;
 use App\Entity\Product;
 use App\Config\Type;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class ProductType extends AbstractType
 {
@@ -19,12 +21,12 @@ class ProductType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom du produit',
-                'attr' => ['placeholder' => 'Ex: T-shirt Ferrari']
+                'attr' => ['placeholder' => 'Ex. Lunettes Ray-Ban Ferrari']
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
-                'attr' => ['rows' => 5, 'placeholder' => 'Description du produit...']
+                'attr' => ['rows' => 5, 'placeholder' => 'Décrivez le produit (matière, taille, usage...)']
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'Type de produit',
@@ -39,12 +41,23 @@ class ProductType extends AbstractType
             ->add('price', MoneyType::class, [
                 'label' => 'Prix (€)',
                 'currency' => 'EUR',
-                'attr' => ['placeholder' => '49.99']
+                'attr' => ['placeholder' => 'Ex. 49.99']
             ])
-            ->add('image', TextType::class, [
-                'label' => 'Image du produit (URL)',
+            ->add('imageFile', FileType::class, [
+                'label' => 'Image du produit',
+                'mapped' => false,
                 'required' => false,
-                'attr' => ['placeholder' => '/images/tshirt_ferrari.jpg']
+                'constraints' => [
+                    new File(
+                        maxSize: '5M',
+                        mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+                        mimeTypesMessage: 'Formats autorisés : JPG, PNG, WEBP, GIF'
+                    ),
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'accept' => 'image/*',
+                ],
             ])
         ;
     }

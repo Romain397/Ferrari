@@ -22,7 +22,7 @@ class PostType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre',
-                'attr' => ['placeholder' => 'Titre de l\'article'],
+                'attr' => ['placeholder' => 'Ex. Ferrari 499P'],
             ])
             ->add('category', EnumType::class, [
                 'label' => '📂 Catégorie (détermine le type)',
@@ -35,29 +35,29 @@ class PostType extends AbstractType
             ->add('content', TextareaType::class, [
                 'label' => 'Description/Contenu',
                 'required' => false,
-                'attr' => ['rows' => 4, 'placeholder' => 'Description détaillée de l\'article'],
+                'attr' => ['rows' => 4, 'placeholder' => 'Décrivez le contenu de l\'article...'],
             ])
 
             // ───── CHAMPS POUR VOITURES (HOME) ─────
             ->add('model', TextType::class, [
                 'label' => 'Modèle de voiture',
                 'required' => false,
-                'attr' => ['placeholder' => 'Ex: Ferrari SF90 Stradale'],
+                'attr' => ['placeholder' => 'Ex. Ferrari SF90 Stradale'],
             ])
             ->add('year', IntegerType::class, [
                 'label' => 'Année',
                 'required' => false,
-                'attr' => ['placeholder' => 'Ex: 2025', 'min' => 1930, 'max' => date("Y")],
+                'attr' => ['placeholder' => 'Ex. 2025', 'min' => 1930, 'max' => date("Y")],
             ])
             ->add('image', UrlType::class, [
                 'label' => 'Image de la voiture (URL)',
                 'required' => false,
-                'attr' => ['placeholder' => 'https://example.com/voiture.jpg'],
+                'attr' => ['placeholder' => 'https://.../voiture.jpg'],
             ])
             ->add('video', UrlType::class, [
                 'label' => 'Vidéo (YouTube/URL)',
                 'required' => false,
-                'attr' => ['placeholder' => 'https://youtu.be/...'],
+                'attr' => ['placeholder' => 'https://youtube.com/...'],
             ])
             ->add('highlight', CheckboxType::class, [
                 'label' => '⭐ Mettre en avant à la une',
@@ -68,7 +68,7 @@ class PostType extends AbstractType
             ->add('circuitImage', UrlType::class, [
                 'label' => 'Image du circuit (URL)',
                 'required' => false,
-                'attr' => ['placeholder' => 'https://example.com/circuit.jpg'],
+                'attr' => ['placeholder' => 'https://.../circuit.jpg'],
             ])
             ->add('raceDate', DateTimeType::class, [
                 'label' => 'Date de la course',
