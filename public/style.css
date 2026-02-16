@@ -20,6 +20,9 @@ html { scroll-behavior: smooth; }
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 1.6;
+    background:
+        linear-gradient(rgba(12, 12, 12, 0.78), rgba(12, 12, 12, 0.82)),
+        url("/images/background.jpg") center / cover fixed no-repeat;
 }
 
 main { min-height: 70vh; }
