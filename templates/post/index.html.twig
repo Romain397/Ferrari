@@ -19,19 +19,29 @@
 				<div class="card {% if post.highlight %}highlight{% endif %} h-100 position-relative">
 
 					{% if post.image %}
-						<img src="{{ post.image }}" class="card-img-top rounded-4" alt="{{ post.model }}">
+						<img
+							src="{{ post.image|optimized_image_url(640) }}"
+							class="card-img-top rounded-4"
+							alt="{{ post.model }}"
+							width="640"
+							height="360"
+							sizes="(min-width: 1200px) 413px, (min-width: 768px) 320px, 96vw"
+							loading="{{ loop.first ? 'eager' : 'lazy' }}"
+							fetchpriority="{{ loop.first ? 'high' : 'auto' }}"
+							decoding="async"
+						>
 					{% endif %}
 
 					<div class="card-body d-flex flex-column">
 						<h3>{{ post.title }}
-							<small class="text-danger">({{ post.model }})</small>
+							<small class="text-warning">({{ post.model }})</small>
 						</h3>
 
 						{% if post.content %}
 							<p class="flex-grow-1">{{ post.content }}</p>
 						{% endif %}
 
-						<p class="text-danger mb-2">Année :
+						<p class="text-warning mb-2">Année :
 							{{ post.year }}</p>
 
 						{% if post.video %}
@@ -42,7 +52,15 @@
 						{% endif %}
 
 						{% if post.circuitImage %}
-							<img src="{{ post.circuitImage }}" alt="Circuit {{ post.title }}" class="img-fluid rounded-3 mt-3">
+							<img
+								src="{{ post.circuitImage|optimized_image_url(640) }}"
+								alt="Circuit {{ post.title }}"
+								class="img-fluid rounded-3 mt-3"
+								width="640"
+								height="360"
+								loading="lazy"
+								decoding="async"
+							>
 						{% endif %}
 					</div>
 

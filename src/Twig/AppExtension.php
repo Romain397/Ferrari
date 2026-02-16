@@ -11,6 +11,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('ferrari_star', [$this, 'ferrariStar']),
+            new TwigFilter('optimized_image_url', [$this, 'optimizedImageUrl']),
         ];
     }
 
@@ -21,5 +22,32 @@ class AppExtension extends AbstractExtension
         }
 
         return $text;
+    }
+
+    public function optimizedImageUrl(?string $url, int $width = 640): string
+    {
+        $source = trim((string) $url);
+        if ($source === '') {
+            return '';
+        }
+
+        // Rewrite Wikimedia originals/thumbnails to a smaller thumbnail size.
+        if (str_contains($source, 'upload.wikimedia.org/wikipedia/commons/')) {
+            $parts = parse_url($source);
+            $path = (string) ($parts['path'] ?? '');
+            if ($path === '') {
+                return $source;
+            }
+
+            if (preg_match('#^/wikipedia/commons/thumb/(.+)/\d+px-(.+)$#', $path, $matches) === 1) {
+                return 'https://upload.wikimedia.org/wikipedia/commons/thumb/' . $matches[1] . '/' . $width . 'px-' . $matches[2];
+            }
+
+            if (preg_match('#^/wikipedia/commons/(.+)/([^/]+)$#', $path, $matches) === 1) {
+                return 'https://upload.wikimedia.org/wikipedia/commons/thumb/' . $matches[1] . '/' . $matches[2] . '/' . $width . 'px-' . $matches[2];
+            }
+        }
+
+        return $source;
     }
 }
