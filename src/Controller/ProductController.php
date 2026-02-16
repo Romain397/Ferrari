@@ -75,13 +75,17 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $uploadedFile = $form->get('imageFile')->getData();
-            if ($uploadedFile instanceof UploadedFile) {
-                $product->setImage($this->uploadProductImage($uploadedFile, $slugger));
-            } else {
-                $this->addFlash('warning', 'Veuillez sélectionner une image depuis votre ordinateur.');
+            $resolvedImage = $this->resolveProductImageInput(
+                $form->get('imageFile')->getData(),
+                (string) $form->get('imageUrl')->getData(),
+                $slugger
+            );
+
+            if ($resolvedImage === null) {
+                $this->addFlash('warning', 'Veuillez fournir une image (fichier local ou URL web valide).');
                 return $this->redirectToRoute('manage_store');
             }
+            $product->setImage($resolvedImage);
 
             $product->setUser($this->getUser());
             $em = $doctrine->getManager();
@@ -107,13 +111,17 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $uploadedFile = $form->get('imageFile')->getData();
-            if ($uploadedFile instanceof UploadedFile) {
-                $product->setImage($this->uploadProductImage($uploadedFile, $slugger));
-            } else {
-                $this->addFlash('warning', 'Veuillez sélectionner une image depuis votre ordinateur.');
+            $resolvedImage = $this->resolveProductImageInput(
+                $form->get('imageFile')->getData(),
+                (string) $form->get('imageUrl')->getData(),
+                $slugger
+            );
+
+            if ($resolvedImage === null) {
+                $this->addFlash('warning', 'Veuillez fournir une image (fichier local ou URL web valide).');
                 return $this->redirectToRoute('store_create');
             }
+            $product->setImage($resolvedImage);
 
             $product->setUser($this->getUser()); // associe le produit à l'utilisateur
             $em = $doctrine->getManager();
@@ -149,9 +157,13 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $uploadedFile = $form->get('imageFile')->getData();
-            if ($uploadedFile instanceof UploadedFile) {
-                $product->setImage($this->uploadProductImage($uploadedFile, $slugger));
+            $resolvedImage = $this->resolveProductImageInput(
+                $form->get('imageFile')->getData(),
+                (string) $form->get('imageUrl')->getData(),
+                $slugger
+            );
+            if ($resolvedImage !== null) {
+                $product->setImage($resolvedImage);
             }
 
             $em = $doctrine->getManager();
@@ -171,7 +183,10 @@ class ProductController extends AbstractController
     {
         $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $slugger->slug($originalFilename);
-        $extension = $uploadedFile->guessExtension() ?: 'bin';
+        $extension = strtolower((string) pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION));
+        if ($extension === '') {
+            $extension = 'bin';
+        }
         $newFilename = sprintf('%s-%s.%s', $safeFilename, uniqid('', true), $extension);
 
         $uploadAbsolutePath = $this->getParameter('kernel.project_dir') . '/public/' . self::PRODUCT_UPLOAD_DIR;
@@ -182,6 +197,29 @@ class ProductController extends AbstractController
         $uploadedFile->move($uploadAbsolutePath, $newFilename);
 
         return self::PRODUCT_UPLOAD_DIR . '/' . $newFilename;
+    }
+
+    private function resolveProductImageInput(mixed $uploadedFile, string $imageUrl, SluggerInterface $slugger): ?string
+    {
+        if ($uploadedFile instanceof UploadedFile) {
+            return $this->uploadProductImage($uploadedFile, $slugger);
+        }
+
+        $candidate = trim($imageUrl);
+        if ($candidate === '') {
+            return null;
+        }
+
+        if (filter_var($candidate, FILTER_VALIDATE_URL) === false) {
+            return null;
+        }
+
+        $scheme = strtolower((string) parse_url($candidate, PHP_URL_SCHEME));
+        if (!in_array($scheme, ['http', 'https'], true)) {
+            return null;
+        }
+
+        return $candidate;
     }
 }
 

@@ -7,12 +7,18 @@ use App\Config\Category;
 use App\Form\PostType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PostController extends AbstractController
 {
+    private const POST_UPLOAD_DIR = 'uploads/posts';
+
     // ───────────── HOME ─────────────
     #[Route('/', name: 'home')]
     public function index(ManagerRegistry $doctrine): Response
@@ -37,7 +43,7 @@ class PostController extends AbstractController
 
     // ───────────── POSTS CRUD ─────────────
     #[Route('/admin/post/manage', name: 'manage_posts')]
-    public function managePosts(ManagerRegistry $doctrine, Request $request): Response
+    public function managePosts(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
     {
         $posts = $doctrine->getRepository(Post::class)->findAll();
 
@@ -45,7 +51,15 @@ class PostController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
+        if ($form->isSubmitted()) {
+            $imageFile = $form->get('imageFile')->getData();
+            $circuitImageFile = $form->get('circuitImageFile')->getData();
+            $this->validatePostImageInputs($post, $form, $imageFile, $circuitImageFile);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->applyPostImageUploads($post, $form->get('imageFile')->getData(), $form->get('circuitImageFile')->getData(), $slugger);
+
             $em = $doctrine->getManager();
             $post->setUser($this->getUser());
             $em->persist($post);
@@ -77,12 +91,20 @@ class PostController extends AbstractController
 
     // ───────────── EDIT POST ─────────────
     #[Route('/posts/edit/{id}', name: 'edit_post')]
-    public function edit(ManagerRegistry $doctrine, Request $request, Post $post): Response
+    public function edit(ManagerRegistry $doctrine, Request $request, Post $post, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
+        if ($form->isSubmitted()) {
+            $imageFile = $form->get('imageFile')->getData();
+            $circuitImageFile = $form->get('circuitImageFile')->getData();
+            $this->validatePostImageInputs($post, $form, $imageFile, $circuitImageFile);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->applyPostImageUploads($post, $form->get('imageFile')->getData(), $form->get('circuitImageFile')->getData(), $slugger);
+
             $em = $doctrine->getManager();
             $em->flush();
             $this->addFlash('success', 'Article modifié avec succès !');
@@ -109,5 +131,55 @@ class PostController extends AbstractController
         return $this->render('sport_auto/index.html.twig', [
             'races' => $races
         ]);
+    }
+
+    private function validatePostImageInputs(Post $post, FormInterface $form, mixed $imageFile, mixed $circuitImageFile): void
+    {
+        if ($post->getCategory() === Category::Voiture) {
+            $hasUrl = trim((string) $post->getImage()) !== '';
+            $hasUpload = $imageFile instanceof UploadedFile;
+            if (!$hasUrl && !$hasUpload) {
+                $form->get('image')->addError(new FormError('L’image de la voiture est obligatoire (URL web ou fichier local).'));
+            }
+        }
+
+        if ($post->getCategory() === Category::Course) {
+            $hasUrl = trim((string) $post->getCircuitImage()) !== '';
+            $hasUpload = $circuitImageFile instanceof UploadedFile;
+            if (!$hasUrl && !$hasUpload) {
+                $form->get('circuitImage')->addError(new FormError('L’image du circuit est obligatoire (URL web ou fichier local).'));
+            }
+        }
+    }
+
+    private function applyPostImageUploads(Post $post, mixed $imageFile, mixed $circuitImageFile, SluggerInterface $slugger): void
+    {
+        if ($imageFile instanceof UploadedFile) {
+            $post->setImage($this->uploadPostImage($imageFile, $slugger));
+        }
+
+        if ($circuitImageFile instanceof UploadedFile) {
+            $post->setCircuitImage($this->uploadPostImage($circuitImageFile, $slugger));
+        }
+    }
+
+    private function uploadPostImage(UploadedFile $uploadedFile, SluggerInterface $slugger): string
+    {
+        $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $slugger->slug($originalFilename);
+        $extension = strtolower((string) pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION));
+        if ($extension === '') {
+            $extension = 'bin';
+        }
+        $newFilename = sprintf('%s-%s.%s', $safeFilename, uniqid('', true), $extension);
+
+        $uploadAbsolutePath = $this->getParameter('kernel.project_dir') . '/public/' . self::POST_UPLOAD_DIR;
+        if (!is_dir($uploadAbsolutePath)) {
+            mkdir($uploadAbsolutePath, 0775, true);
+        }
+
+        $uploadedFile->move($uploadAbsolutePath, $newFilename);
+
+        return self::POST_UPLOAD_DIR . '/' . $newFilename;
     }
 }

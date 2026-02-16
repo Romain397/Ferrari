@@ -74,8 +74,9 @@
 						<div class="col-12 col-sm-6 col-lg-4 mb-4 store-product-col">
 							<article class="card h-100 shadow-sm">
 								{% if product.image %}
+									{% set productImageSrc = product.image starts with 'http' ? product.image : asset(product.image) %}
 									<img
-										src="{{ asset(product.image) }}"
+										src="{{ productImageSrc }}"
 										class="card-img-top store-product-image"
 										alt="{{ product.name }}"
 										width="640"
@@ -117,7 +118,7 @@
 										data-product-id="{{ product.id }}"
 										data-product-name="{{ product.name }}"
 										data-product-price="{{ product.price }}"
-										data-product-image="{{ product.image ? asset(product.image) : '' }}">
+										data-product-image="{{ product.image ? (product.image starts with 'http' ? product.image : asset(product.image)) : '' }}">
 										Ajouter au panier
 									</button>
 								</div>

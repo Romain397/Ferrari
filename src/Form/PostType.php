@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -49,10 +50,19 @@ class PostType extends AbstractType
                 'required' => false,
                 'attr' => ['placeholder' => 'Ex. 2025', 'min' => 1930, 'max' => date("Y")],
             ])
-            ->add('image', UrlType::class, [
-                'label' => 'Image de la voiture (URL)',
+            ->add('image', TextType::class, [
+                'label' => 'Image de la voiture (URL web)',
                 'required' => false,
                 'attr' => ['placeholder' => 'https://.../voiture.jpg'],
+            ])
+            ->add('imageFile', FileType::class, [
+                'label' => 'Image de la voiture (fichier local)',
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'accept' => 'image/*',
+                ],
             ])
             ->add('video', UrlType::class, [
                 'label' => 'Vidéo (YouTube/URL)',
@@ -65,10 +75,19 @@ class PostType extends AbstractType
             ])
 
             // ───── CHAMPS POUR SPORT AUTO (COURSES) ─────
-            ->add('circuitImage', UrlType::class, [
-                'label' => 'Image du circuit (URL)',
+            ->add('circuitImage', TextType::class, [
+                'label' => 'Image du circuit (URL web)',
                 'required' => false,
                 'attr' => ['placeholder' => 'https://.../circuit.jpg'],
+            ])
+            ->add('circuitImageFile', FileType::class, [
+                'label' => 'Image du circuit (fichier local)',
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'accept' => 'image/*',
+                ],
             ])
             ->add('raceDate', DateTimeType::class, [
                 'label' => 'Date de la course',

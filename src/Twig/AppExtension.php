@@ -2,11 +2,16 @@
 
 namespace App\Twig;
 
+use Symfony\Component\Asset\Packages;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
 {
+    public function __construct(private readonly Packages $packages)
+    {
+    }
+
     public function getFilters(): array
     {
         return [
@@ -48,6 +53,10 @@ class AppExtension extends AbstractExtension
             }
         }
 
-        return $source;
+        if (str_starts_with($source, 'http://') || str_starts_with($source, 'https://')) {
+            return $source;
+        }
+
+        return $this->packages->getUrl($source);
     }
 }

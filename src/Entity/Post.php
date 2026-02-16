@@ -36,7 +36,6 @@ class Post
     private ?int $year = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Url(message: 'L’image doit être une URL valide')]
     private ?string $image = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -44,7 +43,6 @@ class Post
     private ?string $video = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Url(message: 'L’image du circuit doit être une URL valide')]
     private ?string $circuitImage = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -192,17 +190,23 @@ class Post
     #[Assert\Callback]
     public function validate(ExecutionContextInterface $context): void
     {
+        if (!empty($this->image) && !$this->isValidImageReference($this->image)) {
+            $context->buildViolation('L’image voiture doit être une URL http(s) valide ou un fichier local uploadé.')
+                ->atPath('image')
+                ->addViolation();
+        }
+
+        if (!empty($this->circuitImage) && !$this->isValidImageReference($this->circuitImage)) {
+            $context->buildViolation('L’image circuit doit être une URL http(s) valide ou un fichier local uploadé.')
+                ->atPath('circuitImage')
+                ->addViolation();
+        }
+
         if ($this->category === Category::Voiture) {
 
             if (empty($this->model)) {
                 $context->buildViolation('Le modèle est obligatoire pour une voiture.')
                     ->atPath('model')
-                    ->addViolation();
-            }
-
-            if (empty($this->image)) {
-                $context->buildViolation('L’image de la voiture est obligatoire.')
-                    ->atPath('image')
                     ->addViolation();
             }
 
@@ -220,12 +224,21 @@ class Post
         }
 
         if ($this->category === Category::Course) {
-
-            if (empty($this->circuitImage)) {
-                $context->buildViolation('L’image du circuit est obligatoire pour une course.')
-                    ->atPath('circuitImage')
-                    ->addViolation();
-            }
         }
+    }
+
+    private function isValidImageReference(string $value): bool
+    {
+        $candidate = trim($value);
+        if ($candidate === '') {
+            return false;
+        }
+
+        if (filter_var($candidate, FILTER_VALIDATE_URL) !== false) {
+            $scheme = (string) parse_url($candidate, PHP_URL_SCHEME);
+            return in_array(strtolower($scheme), ['http', 'https'], true);
+        }
+
+        return str_starts_with($candidate, 'uploads/posts/');
     }
 }
