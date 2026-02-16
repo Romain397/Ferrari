@@ -46,7 +46,7 @@ body.route-orders_index {
 }
 
 body.route-sport_auto {
-    background-image: linear-gradient(rgba(12, 12, 12, 0.34), rgba(12, 12, 12, 0.42)), url("img/sport.jpg") !important;
+    background-image: linear-gradient(rgba(12, 12, 12, 0.34), rgba(12, 12, 12, 0.42)), url("img/sport.jpg");
 }
 
 body.route-app_login {
