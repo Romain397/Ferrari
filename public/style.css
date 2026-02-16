@@ -222,6 +222,17 @@ button[type="submit"].btn-danger:hover {
     padding: 0 !important;
 }
 
+.cart-product-img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.cart-qty-group {
+    max-width: 140px;
+}
+
 .summary {
     color: #ccc;
     font-style: italic;
