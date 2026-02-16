@@ -72,7 +72,28 @@
 							{% endif %}
 							<div class="card-body d-flex flex-column">
 								<h5 class="card-title text-danger">{{ product.name }}</h5>
-								<p class="card-text flex-grow-1">{{ product.description|slice(0,50) ~ '...' }}</p>
+								<div class="flex-grow-1">
+									{% set fullDescription = product.description|default('') %}
+									{% set collapseId = 'desc-' ~ product.id %}
+									{% if fullDescription|length > 90 %}
+										{% set shortDescription = fullDescription|slice(0, 90) %}
+										{% set remainingDescription = fullDescription|slice(90) %}
+										<p class="card-text mb-1">
+											{{ shortDescription }}<span class="store-desc-more collapse collapse-inline" id="{{ collapseId }}">{{ remainingDescription }}</span><span class="store-desc-dots">...</span>
+											<button
+												class="btn store-desc-toggle"
+												type="button"
+												data-bs-toggle="collapse"
+												data-bs-target="#{{ collapseId }}"
+												aria-expanded="false"
+												aria-controls="{{ collapseId }}"
+												aria-label="Afficher plus"
+											>+</button>
+										</p>
+									{% else %}
+										<p class="card-text">{{ fullDescription ?: 'Pas de description' }}</p>
+									{% endif %}
+								</div>
 								<p class="text-danger fw-bold mb-3">{{ product.price }} €</p>
 								<button
 									type="button"

@@ -139,6 +139,38 @@ p { color: #e5e5e5; }
     max-width: 130px;
 }
 
+.store-desc-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-left: .35rem;
+    padding: 0;
+    border: 1px solid #666;
+    border-radius: 999px;
+    color: #ddd;
+    font-size: .8rem;
+    line-height: 1;
+}
+
+.store-desc-toggle:hover {
+    border-color: var(--ferrari-red);
+    color: #fff;
+}
+
+.collapse-inline:not(.show) {
+    display: none;
+}
+
+.collapse-inline.show {
+    display: inline;
+}
+
+.store-desc-more.show + .store-desc-dots {
+    display: none;
+}
+
 .card-img-placeholder {
     display: grid;
     place-items: center;
