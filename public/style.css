@@ -330,3 +330,9 @@ footer {
     main form:not(.checkout-form-inline):not(.d-inline) { padding: 1.5rem; }
     .store-sticky-cart { position: static; }
 }
+
+.store-product-col {
+    content-visibility: auto;
+    contain-intrinsic-size: 360px;
+}
+
