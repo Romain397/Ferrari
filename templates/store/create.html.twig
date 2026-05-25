@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un produit | Store Ferrari{% endblock %}
+
+{% block meta_description %}Page d'ajout d'un nouveau produit dans la boutique Ferrari.{% endblock %}
+
+{% block main %}
+	<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+		<a href="{{ path('store') }}" class="btn btn-secondary">← Retour au Store</a>
+		<h1 class="mb-0 text-danger">Ajouter un produit</h1>
+	</div>
+
+	<div class="card bg-dark border border-danger p-4 no-lift">
+		<h2 class="h4 text-danger mb-4">Formulaire de création</h2>
+
+		{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+			<div class="row g-3">
+				<div class="col-md-6">
+					{{ form_row(form.name, {'attr': {'class': 'form-control'}}) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(form.type, {'attr': {'class': 'form-select'}}) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(form.price, {'attr': {'class': 'form-control', 'step': '0.01', 'min': '0'}}) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(form.imageFile) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(form.imageUrl, {'attr': {'class': 'form-control'}}) }}
+				</div>
+				<div class="col-12">
+					{{ form_row(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+				</div>
+			</div>
+
+			<button type="submit" class="btn btn-danger mt-4">Créer le produit</button>
+		{{ form_end(form) }}
+	</div>
+{% endblock %}
